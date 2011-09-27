@@ -151,57 +151,45 @@
         <delete dir="${TMP}" />
         <mkdir  dir="${TMP}" />
 
+<!--
         <echo message="compiling scoop modules"/>
         <exec executable="python" failonerror="true" failifexecutionfails="true">
             <arg  file="vendor/scooj/scoopc.py"/>
-            <arg value="--out"/>
+            <arg value="-o"/>
             <arg  file="${TMP}/modules"/>
             <arg  file="../${PROJECT_WEB}/modules"/>
         </exec>
+-->
 
         <echo message="compiling CoffeeScript modules"/>
         <mkdir  dir="${TMP}/modules/weinre/client" />
         <mkdir  dir="${TMP}/modules/weinre/common" />
         <mkdir  dir="${TMP}/modules/weinre/target" />
 
-        <fileset id="coffee_files_client" dir=".."> <include name="${PROJECT_WEB}/modules/weinre/client/*.coffee"/> </fileset>
-        <fileset id="coffee_files_common" dir=".."> <include name="${PROJECT_WEB}/modules/weinre/common/*.coffee"/> </fileset>
-        <fileset id="coffee_files_target" dir=".."> <include name="${PROJECT_WEB}/modules/weinre/target/*.coffee"/> </fileset>
-
-        <property name="COFFEE_FILES_CLIENT" refid="coffee_files_client"/>
-        <property name="COFFEE_FILES_COMMON" refid="coffee_files_common"/>
-        <property name="COFFEE_FILES_TARGET" refid="coffee_files_target"/>
-
-        <echo message="compiling CoffeeScript files: ${COFFEE_FILES_CLIENT}"/>
-        <exec executable="${PROJECT_BUILD}/node_modules/.bin/coffee" dir=".." failonerror="true" failifexecutionfails="true">
-            <arg value="--compile"/>
-            <arg value="--bare"/>
-            <arg value="--output"/>
-            <arg value="${PROJECT_BUILD}/${TMP}/modules/weinre/client"/>
-            <arg value="${COFFEE_FILES_CLIENT}"/>
+        <echo message="compiling CoffeeScript files in: ${PROJECT_WEB}/modules/weinre/client"/>
+        <exec executable="sh" failonerror="true" failifexecutionfails="true">
+            <arg value="-c"/>
+            <arg value="node_modules/.bin/coffee --compile --bare --output ${TMP}/modules/weinre/client ../${PROJECT_WEB}/modules/weinre/client/*.coffee"/>
         </exec>
 
-        <echo message="compiling CoffeeScript files: ${COFFEE_FILES_COMMON}"/>
-        <exec executable="${PROJECT_BUILD}/node_modules/.bin/coffee" dir=".." failonerror="true" failifexecutionfails="true">
-            <arg value="--compile"/>
-            <arg value="--bare"/>
-            <arg value="--output"/>
-            <arg value="${PROJECT_BUILD}/${TMP}/modules/weinre/common"/>
-            <arg value="${COFFEE_FILES_COMMON}"/>
+        <echo message="compiling CoffeeScript files in: ${PROJECT_WEB}/modules/weinre/common"/>
+        <exec executable="sh" failonerror="true" failifexecutionfails="true">
+            <arg value="-c"/>
+            <arg value="node_modules/.bin/coffee --compile --bare --output ${TMP}/modules/weinre/common ../${PROJECT_WEB}/modules/weinre/common/*.coffee"/>
         </exec>
 
-        <echo message="compiling CoffeeScript files: ${COFFEE_FILES_TARGET}"/>
-        <exec executable="${PROJECT_BUILD}/node_modules/.bin/coffee" dir=".." failonerror="true" failifexecutionfails="true">
-            <arg value="--compile"/>
-            <arg value="--bare"/>
-            <arg value="--output"/>
-            <arg value="${PROJECT_BUILD}/${TMP}/modules/weinre/target"/>
-            <arg value="${COFFEE_FILES_TARGET}"/>
+        <echo message="compiling CoffeeScript files in: ${PROJECT_WEB}/modules/weinre/target"/>
+        <exec executable="sh" failonerror="true" failifexecutionfails="true">
+            <arg value="-c"/>
+            <arg value="node_modules/.bin/coffee --compile --bare --output ${TMP}/modules/weinre/target ../${PROJECT_WEB}/modules/weinre/target/*.coffee"/>
         </exec>
 
+
+<!--
         <copy todir="${TMP}/modules">
             <fileset file="${VENDOR}/scooj/scooj.js"/>
         </copy>
+-->
 
         <echo message="transportd-izing modules"/>
         <exec executable="python" failonerror="true" failifexecutionfails="true">
