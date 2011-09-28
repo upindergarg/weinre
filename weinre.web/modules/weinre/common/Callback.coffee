@@ -53,7 +53,9 @@ module.exports = class Callback
         catch e
             funcName = func.name
             funcName = "<unnamed>"  unless funcName
-            require("./Weinre").getClass().logError arguments.callee.signature + " exception invoking callback: " + funcName + "(" + args.join(",") + "): " + e
+            require("./Weinre").logError arguments.callee.signature + " exception invoking callback: " + funcName + "(" + args.join(",") + "): " + e
         finally
             Callback.deregister index
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

@@ -192,3 +192,5 @@ handleDOMCharacterDataModified =  (event) ->
       return  unless targetId
       Weinre.wi.DOMNotify.characterDataModified targetId, event.newValue
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

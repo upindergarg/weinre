@@ -34,3 +34,5 @@ nextId =  () ->
       nextIdValue += 1
       result
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

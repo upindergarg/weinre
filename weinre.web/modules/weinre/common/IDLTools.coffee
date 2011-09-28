@@ -63,7 +63,7 @@ module.exports = class IDLTools
                 continue
         return  unless errors.length
         errors.forEach (error) ->
-            require("./Weinre").getClass().logError error
+            require("./Weinre").logError error
 
     #---------------------------------------------------------------------------
     @buildProxyForIDL: (proxyObject, interfaceName) ->
@@ -89,4 +89,7 @@ getProxyMethod =  (intf, method) ->
 
       result.displayName = intf.name + "__" + method.name
       result
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)
 

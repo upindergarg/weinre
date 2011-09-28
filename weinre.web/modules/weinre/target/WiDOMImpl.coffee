@@ -131,3 +131,5 @@ module.exports = class WiDOMImpl
         result = Weinre.injectedScript.pushNodeToFrontend(objectId)
         Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

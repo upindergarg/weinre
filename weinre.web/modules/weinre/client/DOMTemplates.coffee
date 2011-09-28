@@ -45,15 +45,11 @@ addToElement_Object =  (element, anObject) ->
               element.setAttribute key, val
 
 #-------------------------------------------------------------------------------
-elementNames = """
-H1 H2 H3 H4 H5 H6
-UL OL DL LI DT DD
-SPAN DIV A B I TT P HR BR PRE IMG CANVAS
-TABLE TR TD
-FORM INPUT BUTTON SELECT OPTGROUP OPTION TEXTAREA
-"""
-elementNames = elementNames.split(" ")
+elementNames = 'H1 H2 H3 H4 H5 H6 UL OL DL LI DT DD SPAN DIV A B I TT P HR BR PRE IMG CANVAS TABLE TR TD FORM INPUT BUTTON SELECT OPTGROUP OPTION TEXTAREA'
+elementNames = elementNames.split(' ')
 
 for elementName in elementNames
     exports[elementName] = getElementFunction(elementName)
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

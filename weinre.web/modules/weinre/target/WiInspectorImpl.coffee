@@ -45,3 +45,5 @@ module.exports = class WiInspectorImpl
         Weinre.wi.TimelineNotify.timelineProfilerWasStopped()
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

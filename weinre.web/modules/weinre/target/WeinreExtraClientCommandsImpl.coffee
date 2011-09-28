@@ -15,10 +15,13 @@ Console = require('./Console')
 module.exports = class WeinreExtraClientCommandsImpl
 
     constructor: ->
-    
+
     #---------------------------------------------------------------------------
     getDatabases: (callback) ->
         return  unless callback
         result = WiDatabaseImpl.getDatabases()
         Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
-    
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)
+

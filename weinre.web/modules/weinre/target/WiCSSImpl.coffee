@@ -108,3 +108,5 @@ module.exports = class WiCSSImpl
     querySelectorAll: ( documentId,  selector, callback) ->
         Weinre.notImplemented arguments.callee.signature
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

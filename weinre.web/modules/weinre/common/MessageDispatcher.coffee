@@ -151,3 +151,5 @@ module.exports = class MessageDispatcher
         @_reallyClosed = true
         Weinre.logDebug @constructor.name + "[" + @_url + "]: closed"  if Verbose
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

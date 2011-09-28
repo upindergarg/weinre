@@ -13,37 +13,43 @@ Weinre = require('./Weinre')
 module.exports = class EventListeners
 
     constructor: ->
-        @_listeners = []
-    
+        @listeners = []
+
     #---------------------------------------------------------------------------
     add: (listener, useCapture) ->
-        @_listeners.push [ listener, useCapture ]
-    
+        @listeners.push [ listener, useCapture ]
+
     #---------------------------------------------------------------------------
     remove: (listener, useCapture) ->
-        i = 0
-        
-        while i < @_listeners.length
-            listener = @_listeners[i]
-            continue  unless listener[0] == listener
-            continue  unless listener[1] == useCapture
+        listeners = @listeners.slice()
+
+        for _listener in listeners
+            continue  unless _listener[0] == listener
+            continue  unless _listener[1] == useCapture
+
             @_listeners.splice i, 1
             return
-            i++
-    
+
     #---------------------------------------------------------------------------
     fire: (event) ->
-        @_listeners.slice().forEach (listener) ->
-            listener = listener[0]
-            if typeof listener == "function"
+        listeners = @listeners.slice()
+        for listener in listeners
+
+            if typeof listener is "function"
                 try
                     listener.call null, event
                 catch e
-                    Weinre.logError arguments.callee.signature + " invocation exception: " + e
+                    Weinre.logError "#{arguments.callee.name} invocation exception: #{e}"
                 return
-            throw new Ex(arguments, "listener does not implement the handleEvent() method")  unless typeof listener.handleEvent == "function"
+
+            if typeof listener?.handleEvent is not "function"
+                throw new Ex(arguments, "listener does not implement the handleEvent() method")
+
             try
                 listener.handleEvent.call listener, event
             catch e
-                Weinre.logError arguments.callee.signature + " invocation exception: " + e
-    
+                Weinre.logError "#{arguments.callee.name} invocation exception: #{e}"
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)
+

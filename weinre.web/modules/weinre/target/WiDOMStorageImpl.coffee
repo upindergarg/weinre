@@ -116,3 +116,5 @@ _storageEventHandler =  (event) ->
           return
       Weinre.wi.DOMStorageNotify.updateDOMStorage storageId
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

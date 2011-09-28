@@ -9,11 +9,11 @@
 module.exports = class WeinreExtraTargetEventsImpl
 
     constructor: ->
-    
+
     #---------------------------------------------------------------------------
     databaseOpened: (databaseRecord) ->
         WeinreExtraTargetEventsImpl.addDatabaseRecords [ databaseRecord ]
-    
+
     #---------------------------------------------------------------------------
     @addDatabaseRecords: (databaseRecords) ->
         return  unless WebInspector.panels
@@ -22,16 +22,18 @@ module.exports = class WeinreExtraTargetEventsImpl
         existingDbs = WebInspector.panels.resources._databases
         existingDbNames = {}
         i = 0
-        
+
         while i < existingDbs.length
             existingDbNames[existingDbs[i].name] = existingDbs[i]
             i++
         i = 0
-        
+
         while i < databaseRecords.length
             continue  if existingDbNames[databaseRecords[i].name]
             databaseRecord = databaseRecords[i]
             database = new WebInspector.Database(databaseRecord.id, databaseRecord.domain, databaseRecord.name, databaseRecord.version)
             WebInspector.panels.resources.addDatabase database
             i++
-    
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

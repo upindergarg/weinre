@@ -9,11 +9,11 @@
 module.exports = class CheckForProblems
 
     constructor: ->
-    
+
     #---------------------------------------------------------------------------
     @check: ->
         checkForOldPrototypeVersion()
-    
+
 #-------------------------------------------------------------------------------
 checkForOldPrototypeVersion =  () ->
       badVersion = false
@@ -22,4 +22,6 @@ checkForOldPrototypeVersion =  () ->
       badVersion = true  if Prototype.Version.match(/^1\.5.*/)
       badVersion = true  if Prototype.Version.match(/^1\.6.*/)
       alert "Sorry, weinre is not support in versions of Prototype earlier than 1.7"  if badVersion
-  
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

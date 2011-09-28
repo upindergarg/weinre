@@ -12,6 +12,9 @@ Weinre = require('../common/Weinre')
 ConnectorList = require('./ConnectorList')
 dt = require('./DOMTemplates')
 
+# fix WebInspector.Panel's prototype so our super call works
+WebInspector.Panel.prototype.constructor = WebInspector.Panel
+
 #-------------------------------------------------------------------------------
 module.exports = class RemotePanel extends WebInspector.Panel
 
@@ -201,3 +204,5 @@ class ClientList extends ConnectorList
         client.element = item
         item
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

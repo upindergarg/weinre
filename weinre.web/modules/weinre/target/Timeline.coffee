@@ -308,3 +308,6 @@ wrapped_XMLHttpRequest_open =  () ->
 getXhrEventHandler =  (xhr) ->
       (event) ->
           Timeline.addRecord_XHRReadyStateChange xhr.__weinre_method, xhr.__weinre_url, IDGenerator.getId(xhr), xhr
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

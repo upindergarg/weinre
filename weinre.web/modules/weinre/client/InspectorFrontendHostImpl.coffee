@@ -40,7 +40,7 @@ module.exports = class InspectorFrontendHostImpl
     sendMessageToBackend: (message) ->
         object = JSON.parse(message)
         object[1] = "<long script elided>"  if object[0] == "setInjectedScriptSource"
-        Weinre.logInfo arguments.callee.signature + "(" + JSON.stringify(object, null, 4) + ")"
+        Weinre.logInfo arguments.callee.name + "(" + JSON.stringify(object, null, 4) + ")"
 
     #---------------------------------------------------------------------------
     setExtensionAPI: (extensionAPI) ->
@@ -83,3 +83,5 @@ module.exports = class InspectorFrontendHostImpl
                         @_platformFlavor = val
                     else @_port = val  if key == "port"
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

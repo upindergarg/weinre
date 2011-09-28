@@ -140,3 +140,5 @@ dbAdd =  (db, name, version) ->
       payload.version = version
       Weinre.WeinreExtraTargetEvents.databaseOpened payload
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

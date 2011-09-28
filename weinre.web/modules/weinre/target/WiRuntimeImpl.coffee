@@ -40,3 +40,5 @@ module.exports = class WiRuntimeImpl
         result = Weinre.injectedScript.releaseWrapperObjectGroup(objectGroupName)
         Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

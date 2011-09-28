@@ -12,9 +12,15 @@ Ex = require('./Ex')
 module.exports = class Binding
 
     constructor: (receiver, method) ->
-        throw new Ex(arguments, "receiver argument for Binding constructor was null")  unless receiver?
-        method = receiver[method]  if typeof (method) == "string"
-        throw new Ex(arguments, "method argument didn't specify a function")  unless typeof (method) == "function"
-        ->
-            method.apply receiver, [].slice.call(arguments)
-    
+        if not receiver
+            throw new Ex(arguments, "receiver argument for Binding constructor was null")
+
+        method = receiver[method] if typeof (method) == "string"
+
+        if typeof (method) is not "function"
+            throw new Ex(arguments, "method argument didn't specify a function")
+
+        return -> method.apply(receiver, [].slice.call(arguments))
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

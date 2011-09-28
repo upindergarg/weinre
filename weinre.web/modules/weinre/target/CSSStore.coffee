@@ -319,3 +319,6 @@ _webkitMatchesSelector =  (element, selector) ->
 #-------------------------------------------------------------------------------
 _fallbackMatchesSelector =  (element, selector) ->
       false
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

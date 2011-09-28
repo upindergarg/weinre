@@ -43,3 +43,5 @@ module.exports = class InjectedScriptHostImpl
         return match[1]  if match
         "Object"
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

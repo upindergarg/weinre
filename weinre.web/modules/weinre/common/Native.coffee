@@ -35,3 +35,6 @@ exports.SessionStorage_setItem    = -> exports.original.SessionStorage_setItem.a
 exports.SessionStorage_removeItem = -> exports.original.SessionStorage_removeItem.apply( window.sessionStorage, [].slice.call(arguments))
 exports.SessionStorage_clear      = -> exports.original.SessionStorage_clear.apply(      window.sessionStorage, [].slice.call(arguments))
 exports.openDatabase              = -> exports.original.openDatabase.apply( window, [].slice.call(arguments))
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

@@ -17,11 +17,11 @@ module.exports = class ConnectorList
         @ulConnectors = dt.UL(@noneItem)
         @div = dt.DIV(dt.H1(title), @ulConnectors)
         @noneItem.addStyleClass "weinre-connector-item"
-    
+
     #---------------------------------------------------------------------------
     getElement: ->
         @div
-    
+
     #---------------------------------------------------------------------------
     add: (connector) ->
         return  if @connectors[connector.channel]
@@ -34,11 +34,11 @@ module.exports = class ConnectorList
             @ulConnectors.appendChild li
         else
             @ulConnectors.insertBefore li, insertionPoint
-    
+
     #---------------------------------------------------------------------------
     get: (channel) ->
         @connectors[channel]
-    
+
     #---------------------------------------------------------------------------
     getNewestConnectorChannel: (ignoring) ->
         newest = 0
@@ -47,18 +47,18 @@ module.exports = class ConnectorList
             newest = connectorChannel  if connectorChannel > newest
         return null  if newest == 0
         newest
-    
+
     #---------------------------------------------------------------------------
     getConnectorInsertionPoint: (connector) ->
         i = 0
-        
+
         while i < @ulConnectors.childNodes.length
             childNode = @ulConnectors.childNodes[i]
             continue  if null == childNode.connectorChannel
             return childNode  if childNode.connectorChannel < connector.channel
             i++
         null
-    
+
     #---------------------------------------------------------------------------
     remove: (channel, fast) ->
         self = this
@@ -67,7 +67,7 @@ module.exports = class ConnectorList
         connector = @connectors[channel]
         connector.closed = true  if connector
         delete @connectors[channel]
-        
+
         if fast
             @_remove element
         else
@@ -76,18 +76,18 @@ module.exports = class ConnectorList
             window.setTimeout (->
                 self._remove element
             ), 5000
-    
+
     #---------------------------------------------------------------------------
     _remove: (element) ->
         @ulConnectors.removeChild element
         @noneItem.style.display = "list-item"  if @getConnectors().length == 0
-    
+
     #---------------------------------------------------------------------------
     removeAll: () ->
         @getConnectors().forEach ((connector) ->
             @remove connector.channel, true
         ), this
-    
+
     #---------------------------------------------------------------------------
     getConnectors: () ->
         result = []
@@ -95,22 +95,22 @@ module.exports = class ConnectorList
             continue  unless @connectors.hasOwnProperty(channel)
             result.push @connectors[channel]
         result
-    
+
     #---------------------------------------------------------------------------
     getConnectorElement: (channel) ->
         connector = @connectors[channel]
         return null  unless connector
         connector.element
-    
+
     #---------------------------------------------------------------------------
     setCurrent: (channel) ->
         @getConnectors().forEach (connector) ->
             connector.element.removeStyleClass "current"
-        
+
         element = @getConnectorElement(channel)
         return  if null == element
         element.addStyleClass "current"
-    
+
     #---------------------------------------------------------------------------
     setState: (channel, state) ->
         if typeof channel == "string"
@@ -123,4 +123,6 @@ module.exports = class ConnectorList
         element.removeStyleClass "connected"
         element.removeStyleClass "not-connected"
         element.addStyleClass state
-    
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

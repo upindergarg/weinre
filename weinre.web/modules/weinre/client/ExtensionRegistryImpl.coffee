@@ -31,3 +31,5 @@ module.exports = class ExtensionRegistryImpl
     _installExtensions: ->
         WebInspector.addExtensions extensions
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

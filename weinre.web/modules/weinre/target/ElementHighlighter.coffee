@@ -102,3 +102,5 @@ getMetrics =  (element) ->
 fromPx =  (string) ->
       parseInt string.replace(/px$/, "")
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

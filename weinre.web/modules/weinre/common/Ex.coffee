@@ -16,11 +16,13 @@ module.exports = class Ex
         StackTrace.dump args
         message = "threw error: " + message  if message instanceof Error
         new Error(prefix(args, message))
-    
+
 #-------------------------------------------------------------------------------
 prefix =  (args, string) ->
       return args.callee.signature + ": " + string  if args.callee.signature
       return args.callee.displayName + ": " + string  if args.callee.displayName
       return args.callee.name + ": " + string  if args.callee.name
       "<anonymous>" + ": " + string
-  
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

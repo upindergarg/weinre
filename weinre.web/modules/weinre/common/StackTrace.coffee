@@ -11,19 +11,19 @@ module.exports = class StackTrace
     constructor: (args) ->
         throw Error("first parameter to " + arguments.callee.signature + " must be an Arguments object")  if not args or not args.callee
         @trace = getTrace(args)
-    
+
     #---------------------------------------------------------------------------
     @dump: (args) ->
         args = args or arguments
         stackTrace = new StackTrace(args)
         stackTrace.dump()
-    
+
     #---------------------------------------------------------------------------
     dump: ->
         console.log "StackTrace:"
         @trace.forEach (frame) ->
             console.log "    " + frame
-    
+
 #-------------------------------------------------------------------------------
 getTrace =  (args) ->
       result = []
@@ -44,4 +44,6 @@ getTrace =  (args) ->
           visitedFuncs.push func
           func = func.caller
       result
-  
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

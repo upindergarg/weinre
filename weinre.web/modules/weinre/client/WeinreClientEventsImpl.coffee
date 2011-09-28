@@ -78,3 +78,5 @@ module.exports = class WeinreClientEventsImpl
     serverProperties: ( properties) ->
         WebInspector.panels.remote.setServerProperties properties  if @client.uiAvailable()
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

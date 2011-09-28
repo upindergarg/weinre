@@ -160,3 +160,5 @@ module.exports = class Console
     groupEnd: ->
         Weinre.notImplemented arguments.callee.signature
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

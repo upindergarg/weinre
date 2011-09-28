@@ -35,3 +35,5 @@ module.exports = class WeinreTargetEventsImpl
     sendCallback: ( callbackId,  result) ->
         Callback.invoke callbackId, result
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

@@ -35,7 +35,7 @@ WiRuntimeImpl = require('./WiRuntimeImpl')
 module.exports = class Target
 
     constructor: ->
-    
+
     #---------------------------------------------------------------------------
     @main: ->
         CheckForProblems.check()
@@ -43,7 +43,7 @@ module.exports = class Target
         Weinre.target.initialize()
         Weinre.addCSSProperties = addCSSProperties = (properties) ->
             CSSStore.addCSSProperties properties
-    
+
     #----------------------------------------------------------------------------
     setWeinreServerURLFromScriptSrc: (element) ->
         return  if window.WeinreServerURL
@@ -56,7 +56,7 @@ module.exports = class Target
         message = "unable to calculate the weinre server url; explicity set the variable window.WeinreServerURL instead"
         alert message
         throw new Ex(arguments, message)
-    
+
     #---------------------------------------------------------------------------
     setWeinreServerIdFromScriptSrc: (element) ->
         return  if window.WeinreServerId
@@ -70,13 +70,13 @@ module.exports = class Target
                 attempt = location.hash.split("#")[1]
                 hash = attempt  if attempt
         window.WeinreServerId = hash
-    
+
     #---------------------------------------------------------------------------
     getTargetScriptElement: ->
         elements = document.getElementsByTagName("script")
         scripts = [ "Target.", "target-script.", "target-script-min." ]
         i = 0
-        
+
         while i < elements.length
             element = elements[i]
             j = 0
@@ -84,7 +84,7 @@ module.exports = class Target
                 return element  unless -1 == element.src.indexOf("/" + scripts[j])
                 j++
             i++
-    
+
     #---------------------------------------------------------------------------
     initialize: () ->
         self = this
@@ -142,38 +142,41 @@ module.exports = class Target
         window.addEventListener "error", ((e) ->
             Target.handleError e
         ), false
-    
+
     #---------------------------------------------------------------------------
     @handleError: (event) ->
         filename = event.filename or "[unknown filename]"
         lineno = event.lineno or "[unknown lineno]"
         message = event.message or "[unknown message]"
         Weinre.logError "error occurred: " + filename + ":" + lineno + ": " + message
-    
+
     #---------------------------------------------------------------------------
     cb_webSocketOpened: () ->
         Weinre.WeinreTargetCommands.registerTarget window.location.href, Binding(this, @cb_registerTarget)
-    
+
     #---------------------------------------------------------------------------
     cb_registerTarget: (targetDescription) ->
         Weinre.targetDescription = targetDescription
-    
+
     #---------------------------------------------------------------------------
     onLoaded: ->
         Weinre.wi.InspectorNotify.loadEventFired currentTime() - @_startTime
-    
+
     #---------------------------------------------------------------------------
     onDOMContent: ->
         Weinre.wi.InspectorNotify.domContentEventFired currentTime() - @_startTime
-    
+
     #---------------------------------------------------------------------------
     setDocument: () ->
         Weinre.elementHighlighter = new ElementHighlighter()
         nodeId = Weinre.nodeStore.getNodeId(document)
         nodeData = Weinre.nodeStore.getNodeData(nodeId, 2)
         Weinre.wi.DOMNotify.setDocument nodeData
-    
+
 # WebKit's currentTime() seems to return time in seconds
 currentTime =  () ->
       (new Date().getMilliseconds()) / 1000.0
-  
+
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

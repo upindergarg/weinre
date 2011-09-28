@@ -113,3 +113,6 @@ installWebInspectorAPIsource =  () ->
       console.log "installing webInspector with injectedScriptId: " + id
       extensionAPI += "(null,null," + id + ")"
       extensionAPI
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

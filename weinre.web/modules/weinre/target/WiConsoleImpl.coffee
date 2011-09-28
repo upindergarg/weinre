@@ -29,3 +29,5 @@ module.exports = class WiConsoleImpl
     setMonitoringXHREnabled: ( enabled, callback) ->
         Weinre.WeinreTargetCommands.sendClientCallback callback, []  if callback
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

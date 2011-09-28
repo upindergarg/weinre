@@ -178,3 +178,5 @@ _xhrEventHandler =  (event) ->
       return  unless xhr.readyState == 4
       xhr.httpSocketHandler.call xhr.httpSocket, xhr
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

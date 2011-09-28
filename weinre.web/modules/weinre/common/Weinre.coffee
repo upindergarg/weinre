@@ -75,3 +75,5 @@ getLogger =  () ->
       else logger = Weinre.WeinreTargetCommands  if Weinre.target
       logger
 
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

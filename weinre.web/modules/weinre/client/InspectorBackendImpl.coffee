@@ -17,7 +17,7 @@ module.exports = class InspectorBackendImpl
     constructor: ->
         @registeredDomainDispatchers = {}
         MessageDispatcher.setInspectorBackend this
-    
+
     #---------------------------------------------------------------------------
     @setupProxies: ->
         intfNames = [ "ApplicationCache", "BrowserDebugger", "CSS", "Console", "DOM", "DOMStorage", "Database", "Debugger", "InjectedScript", "Inspector", "Network", "Profiler", "Runtime" ]
@@ -31,18 +31,20 @@ module.exports = class InspectorBackendImpl
                 proxyMethod = InspectorBackendImpl.getProxyMethod(proxy, method)
                 InspectorBackendImpl::[method.name] = proxyMethod
                 window[intfName][method.name] = proxyMethod
-    
+
     #---------------------------------------------------------------------------
     @getProxyMethod: (proxy, method) ->
         ->
             proxy[method.name].apply proxy, arguments
-    
+
     #---------------------------------------------------------------------------
     registerDomainDispatcher: (name, intf) ->
         @registeredDomainDispatchers[name] = intf
-    
+
     #---------------------------------------------------------------------------
     getRegisteredDomainDispatcher: (name) ->
         return null  unless @registeredDomainDispatchers.hasOwnProperty(name)
         @registeredDomainDispatchers[name]
-    
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)

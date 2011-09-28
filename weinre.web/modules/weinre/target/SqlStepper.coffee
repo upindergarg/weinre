@@ -16,7 +16,7 @@ module.exports = class SqlStepper
         @__context = {}
         context = @__context
         context.steps = steps
-    
+
     #---------------------------------------------------------------------------
     run: (db, errorCallback) ->
         context = @__context
@@ -29,7 +29,7 @@ module.exports = class SqlStepper
         context.runStep = new Binding(this, runStep)
         @executeSql = new Binding(this, executeSql)
         db.transaction context.runStep
-    
+
     #---------------------------------------------------------------------------
     @example: (db, id) ->
         step1 = ->
@@ -38,7 +38,7 @@ module.exports = class SqlStepper
             rows = resultSet.rows
             result = []
             i = 0
-            
+
             while i < rows.length
                 name = rows.item(i).name
                 continue  if name == "__WebKitDatabaseInfoTable__"
@@ -50,18 +50,18 @@ module.exports = class SqlStepper
         stepper = new SqlStepper([ step1, step2 ])
         stepper.id = id
         stepper.run db, errorCb
-    
+
 
 #-------------------------------------------------------------------------------
 executeSql =  (statement, data) ->
       context = @__context
       context.tx.executeSql statement, data, context.runStep, context.ourErrorCallback
-  
+
 #-------------------------------------------------------------------------------
 ourErrorCallback =  (tx, sqlError) ->
       context = @__context
       context.errorCallback.call this, sqlError
-  
+
 #-------------------------------------------------------------------------------
 runStep =  (tx, resultSet) ->
       context = @__context
@@ -71,4 +71,6 @@ runStep =  (tx, resultSet) ->
       context.nextStep++
       step = context.steps[context.currentStep]
       step.call this, resultSet
-  
+
+#-------------------------------------------------------------------------------
+require("../common/MethodNamer").setNamesForClass(module.exports)
