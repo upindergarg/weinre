@@ -55,10 +55,10 @@ module.exports = class SqlStepper
                 result.push name
                 i++
 
-            console.log "[" + @id + "] table names: " + result.join(", ")
+            console.log "[#{@id}] table names: " + result.join(", ")
 
         errorCb = (sqlError) ->
-            console.log "[" + @id + "] sql error:" + sqlError.code + ": " + sqlError.message
+            console.log "[#{@id}] sql error:#{sqlError.code}: " + sqlError.message
 
         stepper = new SqlStepper([ step1, step2 ])
         stepper.id = id
@@ -66,19 +66,19 @@ module.exports = class SqlStepper
 
 
 #-------------------------------------------------------------------------------
-executeSql =  (statement, data) ->
+executeSql = (statement, data) ->
       context = @__context
       context.tx.executeSql statement, data, context.runStep, context.ourErrorCallback
 
 #-------------------------------------------------------------------------------
-ourErrorCallback =  (tx, sqlError) ->
+ourErrorCallback = (tx, sqlError) ->
       context = @__context
       context.errorCallback.call this, sqlError
 
 #-------------------------------------------------------------------------------
-runStep =  (tx, resultSet) ->
+runStep = (tx, resultSet) ->
       context = @__context
-      return  if context.nextStep >= context.steps.length
+      return if context.nextStep >= context.steps.length
 
       context.tx = tx
       context.currentStep = context.nextStep

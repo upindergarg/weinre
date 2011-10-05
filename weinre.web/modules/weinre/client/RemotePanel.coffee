@@ -20,7 +20,7 @@ module.exports = class RemotePanel extends WebInspector.Panel
 
     RemotePanel::__defineGetter__("toolbarItemClass", -> "remote")
     RemotePanel::__defineGetter__("toolbarItemLabel", -> "Remote")
-    RemotePanel::__defineGetter__("statusBarItems", -> [] )
+    RemotePanel::__defineGetter__("statusBarItems", -> [])
     RemotePanel::__defineGetter__("defaultFocusedElement", -> @contentElement)
 
     constructor: ->
@@ -110,10 +110,10 @@ module.exports = class RemotePanel extends WebInspector.Panel
         for target in targets
             @addTarget target
 
-        return  unless Weinre.client.autoConnect()
+        return unless Weinre.client.autoConnect()
         newestTargetChannel = @getNewestTargetChannel()
-        return  unless newestTargetChannel
-        return  unless Weinre.messageDispatcher
+        return unless newestTargetChannel
+        return unless Weinre.messageDispatcher
         Weinre.WeinreClientCommands.connectTarget Weinre.messageDispatcher.channel, newestTargetChannel
 
     #---------------------------------------------------------------------------
@@ -145,8 +145,8 @@ module.exports = class RemotePanel extends WebInspector.Panel
                 for aVal in val
                     finalVal += "<li>" + aVal.escapeHTML()
 
-                val = "<ul>" + finalVal + "</ul>"
-            table += "<tr class='weinre-normal-text-size'><td valign='top'>" + key.escapeHTML() + ": <td>" + val
+                val = "<ul>#{finalVal}</ul>"
+            table += "<tr class='weinre-normal-text-size'><td valign='top'>#{key.escapeHTML()}: <td>" + val
 
         table += "</table>"
         @serverProperties.innerHTML = table
@@ -160,7 +160,7 @@ class TargetList extends ConnectorList
     #---------------------------------------------------------------------------
     getListItem: (target) ->
         self = this
-        text = target.hostName + " [channel: " + target.channel + " id: " + target.id + "]" + " - " + target.url
+        text = target.hostName + " [channel: #{target.channel} id: #{target.id}]" + " - " + target.url
         item = DT.LI($connectorChannel: target.channel, text)
         item.addStyleClass "weinre-connector-item"
         item.addStyleClass "target"
@@ -176,8 +176,8 @@ class TargetList extends ConnectorList
             event.preventDefault()
             event.stopPropagation()
         target = @connectors[targetChannel]
-        return false  unless target
-        return false  if target.closed
+        return false unless target
+        return false if target.closed
         Weinre.WeinreClientCommands.connectTarget Weinre.messageDispatcher.channel, targetChannel
         false
 
@@ -195,7 +195,7 @@ class ClientList extends ConnectorList
 
     #---------------------------------------------------------------------------
     getListItem: (client) ->
-        text = client.hostName + " [channel: " + client.channel + " id: " + client.id + "]"
+        text = client.hostName + " [channel: #{client.channel} id: #{client.id}]"
         item = DT.LI($connectorChannel: client.channel, text)
         item.addStyleClass "weinre-connector-item"
         item.addStyleClass "client"

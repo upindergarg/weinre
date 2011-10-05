@@ -10,7 +10,7 @@ module.exports = class StackTrace
 
     constructor: (args) ->
         if not args or not args.callee
-            throw Error("first parameter to " + arguments.callee.signature + " must be an Arguments object")
+            throw Error("first parameter to #{arguments.callee.signature} must be an Arguments object")
 
         @trace = getTrace(args)
 
@@ -27,7 +27,7 @@ module.exports = class StackTrace
             console.log "    " + frame
 
 #-------------------------------------------------------------------------------
-getTrace =  (args) ->
+getTrace = (args) ->
       result = []
       visitedFuncs = []
       func = args.callee

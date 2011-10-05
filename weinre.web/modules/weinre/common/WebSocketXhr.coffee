@@ -13,7 +13,6 @@ Native         = require('./Native')
 
 XMLHttpRequest = Native.XMLHttpRequest
 
-
 #-------------------------------------------------------------------------------
 module.exports = class WebSocketXhr
 
@@ -28,7 +27,7 @@ module.exports = class WebSocketXhr
 
     #---------------------------------------------------------------------------
     initialize: (url, id) ->
-        id = "anonymous"  unless id
+        id = "anonymous" unless id
         @readyState = WebSocketXhr.CONNECTING
         @_url = url
         @_id = id
@@ -51,7 +50,7 @@ module.exports = class WebSocketXhr
 
     #---------------------------------------------------------------------------
     _handleXhrResponseGetChannel: (xhr) ->
-        return @_handleXhrResponseError(xhr)  unless xhr.status == 200
+        return @_handleXhrResponseError(xhr) unless xhr.status == 200
 
         try
             object = JSON.parse(xhr.responseText)
@@ -78,15 +77,15 @@ module.exports = class WebSocketXhr
 
     #---------------------------------------------------------------------------
     _readLoop: ->
-        return  if @readyState == WebSocketXhr.CLOSED
-        return  if @readyState == WebSocketXhr.CLOSING
+        return if @readyState == WebSocketXhr.CLOSED
+        return if @readyState == WebSocketXhr.CLOSING
 
         @_xhr @_urlChannel, "GET", "", @_handleXhrResponseGet
 
     #---------------------------------------------------------------------------
     _handleXhrResponseGet: (xhr) ->
         self = this
-        return @_handleXhrResponseError(xhr)  unless xhr.status == 200
+        return @_handleXhrResponseError(xhr) unless xhr.status == 200
 
         try
             datum = JSON.parse(xhr.responseText)
@@ -108,14 +107,14 @@ module.exports = class WebSocketXhr
             throw new Ex(arguments, @constructor.name + "." + @caller)
 
         @_queuedSends.push data
-        return  if @_sendInProgress
+        return if @_sendInProgress
         @_sendQueued()
 
     #---------------------------------------------------------------------------
     _sendQueued: ->
-        return  if @_queuedSends.length == 0
-        return  if @readyState == WebSocketXhr.CLOSED
-        return  if @readyState == WebSocketXhr.CLOSING
+        return if @_queuedSends.length == 0
+        return if @readyState == WebSocketXhr.CLOSED
+        return if @readyState == WebSocketXhr.CLOSING
 
         datum = JSON.stringify(@_queuedSends)
         @_queuedSends = []
@@ -125,7 +124,7 @@ module.exports = class WebSocketXhr
     #---------------------------------------------------------------------------
     _handleXhrResponseSend: (xhr) ->
         httpSocket = this
-        return @_handleXhrResponseError(xhr)  unless xhr.status == 200
+        return @_handleXhrResponseError(xhr) unless xhr.status == 200
 
         @_sendInProgress = false
 
@@ -154,7 +153,7 @@ module.exports = class WebSocketXhr
 
     #---------------------------------------------------------------------------
     _fireEventListeners: (type, event) ->
-        return  if @readyState == WebSocketXhr.CLOSED
+        return if @readyState == WebSocketXhr.CLOSED
 
         event.target = this
         @_getListeners(type).fire event
@@ -163,7 +162,7 @@ module.exports = class WebSocketXhr
     _getListeners: (type) ->
         listeners = @_listeners[type]
         if null == listeners
-            throw new Ex(arguments, "invalid event listener type: '" + type + "'")
+            throw new Ex(arguments, "invalid event listener type: '#{type}'")
         listeners
 
     #---------------------------------------------------------------------------
@@ -177,7 +176,7 @@ module.exports = class WebSocketXhr
             status: xhr.status
             message: "error from XHR invocation: " + xhr.statusText
 
-        Weinre.logError "error from XHR invocation: " + xhr.status + ": " + xhr.statusText
+        Weinre.logError "error from XHR invocation: #{xhr.status}: " + xhr.statusText
 
     #---------------------------------------------------------------------------
     _xhr: (url, method, data, handler) ->
@@ -193,9 +192,9 @@ module.exports = class WebSocketXhr
         xhr.send data
 
 #-------------------------------------------------------------------------------
-_xhrEventHandler =  (event) ->
+_xhrEventHandler = (event) ->
       xhr = event.target
-      return  unless xhr.readyState == 4
+      return unless xhr.readyState == 4
 
       xhr.httpSocketHandler.call xhr.httpSocket, xhr
 

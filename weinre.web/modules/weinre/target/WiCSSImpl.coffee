@@ -15,7 +15,7 @@ module.exports = class WiCSSImpl
         @dummyComputedStyle = false
 
     #---------------------------------------------------------------------------
-    getStylesForNode: ( nodeId, callback) ->
+    getStylesForNode: (nodeId, callback) ->
         result = {}
         node = Weinre.nodeStore.getNode(nodeId)
 
@@ -53,7 +53,7 @@ module.exports = class WiCSSImpl
             Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
-    getComputedStyleForNode: ( nodeId, callback) ->
+    getComputedStyleForNode: (nodeId, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
 
         unless node
@@ -65,7 +65,7 @@ module.exports = class WiCSSImpl
             Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
-    getInlineStyleForNode: ( nodeId, callback) ->
+    getInlineStyleForNode: (nodeId, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
 
         unless node
@@ -81,33 +81,33 @@ module.exports = class WiCSSImpl
         Weinre.notImplemented arguments.callee.signature
 
     #---------------------------------------------------------------------------
-    getStyleSheet: ( styleSheetId, callback) ->
+    getStyleSheet: (styleSheetId, callback) ->
         Weinre.notImplemented arguments.callee.signature
 
     #---------------------------------------------------------------------------
-    getStyleSheetText: ( styleSheetId, callback) ->
+    getStyleSheetText: (styleSheetId, callback) ->
         Weinre.notImplemented arguments.callee.signature
 
     #---------------------------------------------------------------------------
-    setStyleSheetText: ( styleSheetId,  text, callback) ->
+    setStyleSheetText: (styleSheetId, text, callback) ->
         Weinre.notImplemented arguments.callee.signature
 
     #---------------------------------------------------------------------------
-    setPropertyText: ( styleId,  propertyIndex,  text,  overwrite, callback) ->
+    setPropertyText: (styleId, propertyIndex, text, overwrite, callback) ->
         result = Weinre.cssStore.setPropertyText(styleId, propertyIndex, text, overwrite)
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ] if callback
 
     #---------------------------------------------------------------------------
-    toggleProperty: ( styleId,  propertyIndex,  disable, callback) ->
+    toggleProperty: (styleId, propertyIndex, disable, callback) ->
         result = Weinre.cssStore.toggleProperty(styleId, propertyIndex, disable)
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ] if callback
 
     #---------------------------------------------------------------------------
-    setRuleSelector: ( ruleId,  selector, callback) ->
+    setRuleSelector: (ruleId, selector, callback) ->
         Weinre.notImplemented arguments.callee.signature
 
     #---------------------------------------------------------------------------
-    addRule: ( contextNodeId,  selector, callback) ->
+    addRule: (contextNodeId, selector, callback) ->
         Weinre.notImplemented arguments.callee.signature
 
     #---------------------------------------------------------------------------
@@ -115,7 +115,7 @@ module.exports = class WiCSSImpl
         Weinre.getCSSProperties()
 
     #---------------------------------------------------------------------------
-    querySelectorAll: ( documentId,  selector, callback) ->
+    querySelectorAll: (documentId, selector, callback) ->
         Weinre.notImplemented arguments.callee.signature
 
 #-------------------------------------------------------------------------------

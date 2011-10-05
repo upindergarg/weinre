@@ -40,10 +40,10 @@ module.exports = class Weinre
 
     #---------------------------------------------------------------------------
     @notImplemented: (thing) ->
-        return  if _notImplemented[thing]
+        return if _notImplemented[thing]
 
         _notImplemented[thing] = true
-        return  unless _showNotImplemented
+        return unless _showNotImplemented
 
         Weinre.logWarning thing + " not implemented"
 
@@ -80,8 +80,8 @@ class ConsoleLogger
 consoleLogger = new ConsoleLogger()
 
 #-------------------------------------------------------------------------------
-getLogger =  () ->
-    return logger  if logger
+getLogger = () ->
+    return logger if logger
 
     if Weinre.client
         logger = Weinre.WeinreClientCommands

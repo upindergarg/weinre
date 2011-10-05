@@ -19,7 +19,7 @@ module.exports = class ExtensionRegistryImpl
 
     #---------------------------------------------------------------------------
     getExtensionsAsync: ->
-        return  if extensions.length
+        return if extensions.length
         Weinre.WeinreClientCommands.getExtensions Binding(this, @_cb_getExtensions)
 
     #---------------------------------------------------------------------------

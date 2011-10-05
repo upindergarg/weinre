@@ -17,7 +17,7 @@ module.exports = class WeinreExtraClientCommandsImpl
 
     #---------------------------------------------------------------------------
     getDatabases: (callback) ->
-        return  unless callback
+        return unless callback
         result = WiDatabaseImpl.getDatabases()
 
         Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]

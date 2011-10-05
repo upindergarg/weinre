@@ -15,21 +15,21 @@ module.exports = class InjectedScriptHostImpl
 
     #---------------------------------------------------------------------------
     clearConsoleMessages: (callback) ->
-        Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback if callback
 
     #---------------------------------------------------------------------------
-    nodeForId: ( nodeId, callback) ->
+    nodeForId: (nodeId, callback) ->
         Weinre.nodeStore.getNode nodeId
 
     #---------------------------------------------------------------------------
-    pushNodePathToFrontend: ( node,  withChildren,  selectInUI, callback) ->
+    pushNodePathToFrontend: (node, withChildren, selectInUI, callback) ->
         nodeId = Weinre.nodeStore.getNodeId(node)
         children = Weinre.nodeStore.serializeNode(node, 1)
         Weinre.wi.DOMNotify.setChildNodes nodeId, children
-        Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback if callback
 
     #---------------------------------------------------------------------------
-    inspectedNode: ( num, callback) ->
+    inspectedNode: (num, callback) ->
         nodeId = Weinre.nodeStore.getInspectedNode(num)
         nodeId
 
@@ -37,12 +37,12 @@ module.exports = class InjectedScriptHostImpl
     internalConstructorName: (object) ->
         ctor = object.constructor
         ctorName = ctor.fullClassName or ctor.displayName or ctor.name
-        return ctorName  if ctorName and (ctorName != "Object")
+        return ctorName if ctorName and (ctorName != "Object")
 
         pattern = /\[object (.*)\]/
         match = pattern.exec(ctor.toString())
 
-        return match[1]  if match
+        return match[1] if match
 
         "Object"
 

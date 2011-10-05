@@ -16,14 +16,15 @@ module.exports = class Ex
             throw Ex(arguments, "first parameter must be an Arguments object")
 
         StackTrace.dump args
-        message = "threw error: " + message  if message instanceof Error
+        message = "threw error: " + message if message instanceof Error
         new Error(prefix(args, message))
 
 #-------------------------------------------------------------------------------
-prefix =  (args, string) ->
-      return args.callee.signature + ": " + string  if args.callee.signature
-      return args.callee.displayName + ": " + string  if args.callee.displayName
-      return args.callee.name + ": " + string  if args.callee.name
+prefix = (args, string) ->
+      return args.callee.signature   + ": " + string if args.callee.signature
+      return args.callee.displayName + ": " + string if args.callee.displayName
+      return args.callee.name        + ": " + string if args.callee.name
+
       "<anonymous>" + ": " + string
 
 #-------------------------------------------------------------------------------

@@ -39,8 +39,8 @@ module.exports = class InspectorFrontendHostImpl
     #---------------------------------------------------------------------------
     sendMessageToBackend: (message) ->
         object = JSON.parse(message)
-        object[1] = "<long script elided>"  if object[0] == "setInjectedScriptSource"
-        Weinre.logInfo arguments.callee.name + "(" + JSON.stringify(object, null, 4) + ")"
+        object[1] = "<long script elided>" if object[0] == "setInjectedScriptSource"
+        Weinre.logInfo arguments.callee.name + "(#{JSON.stringify(object, null, 4)})"
 
     #---------------------------------------------------------------------------
     setExtensionAPI: (extensionAPI) ->
@@ -58,7 +58,7 @@ module.exports = class InspectorFrontendHostImpl
         @_platform = "weinre"
         @_platformFlavor = "weinre"
         @_port = "weinre"
-        return  if true
+        return if true
         uas = navigator.userAgent
         if uas.match(/mac os x/i)
             @_platform = "mac"
@@ -66,7 +66,7 @@ module.exports = class InspectorFrontendHostImpl
             @_platform = "mac"
         else if uas.match(/linux/i)
             @_platform = "linux"
-        else @_platform = "windows"  if uas.match(/windows/i)
+        else @_platform = "windows" if uas.match(/windows/i)
         url = window.location.href
         splits = url.split("#", 2)
         if splits.length > 1
@@ -81,7 +81,7 @@ module.exports = class InspectorFrontendHostImpl
                         @_platform = val
                     else if key == "platformFlavor"
                         @_platformFlavor = val
-                    else @_port = val  if key == "port"
+                    else @_port = val if key == "port"
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

@@ -26,7 +26,7 @@ module.exports = class NodeStore
     #---------------------------------------------------------------------------
     addInspectedNode: (nodeId) ->
         @inspectedNodes.unshift nodeId
-        @inspectedNodes = @inspectedNodes.slice(0, 5)  if @inspectedNodes.length > 5
+        @inspectedNodes = @inspectedNodes.slice(0, 5) if @inspectedNodes.length > 5
 
     #---------------------------------------------------------------------------
     getInspectedNode: (index) ->
@@ -43,7 +43,7 @@ module.exports = class NodeStore
     #---------------------------------------------------------------------------
     getNodeId: (node) ->
         id = @checkNodeId(node)
-        return id  if id
+        return id if id
         IDGenerator.getId node, @__nodeMap
 
     #---------------------------------------------------------------------------
@@ -54,10 +54,10 @@ module.exports = class NodeStore
     getPreviousSiblingId: (node) ->
         while true
             sib = node.previousSibling
-            return 0  unless sib
+            return 0 unless sib
 
             id = @checkNodeId(sib)
-            return id  if id
+            return id if id
 
             node = sib
 
@@ -97,7 +97,7 @@ module.exports = class NodeStore
         if node.nodeType == Node.ELEMENT_NODE or node.nodeType == Node.DOCUMENT_NODE or node.nodeType == Node.DOCUMENT_FRAGMENT_NODE
           nodeData.childNodeCount = @childNodeCount(node)
           children = @serializeNodeChildren(node, depth)
-          nodeData.children = children  if children.length
+          nodeData.children = children if children.length
 
           if node.nodeType == Node.ELEMENT_NODE
             nodeData.attributes = []
@@ -161,33 +161,33 @@ module.exports = class NodeStore
 
     #---------------------------------------------------------------------------
     isToBeSkipped: (node) ->
-        return true  unless node
-        return true  if node.__weinreHighlighter
-        return false  unless node.nodeType == Node.TEXT_NODE
+        return true unless node
+        return true if node.__weinreHighlighter
+        return false unless node.nodeType == Node.TEXT_NODE
 
         not not node.nodeValue.match(/^\s*$/)
 
 #-------------------------------------------------------------------------------
-handleDOMSubtreeModified =  (event) ->
-      return  unless event.attrChange
+handleDOMSubtreeModified = (event) ->
+      return unless event.attrChange
       NodeStore.handleDOMAttrModified event
 
 #-------------------------------------------------------------------------------
-handleDOMNodeInserted =  (event) ->
+handleDOMNodeInserted = (event) ->
       targetId = Weinre.nodeStore.checkNodeId(event.target)
       parentId = Weinre.nodeStore.checkNodeId(event.relatedNode)
 
-      return  unless parentId
+      return unless parentId
 
       child    = Weinre.nodeStore.serializeNode(event.target, 0)
       previous = Weinre.nodeStore.getPreviousSiblingId(event.target)
       Weinre.wi.DOMNotify.childNodeInserted parentId, previous, child
 
 #-------------------------------------------------------------------------------
-handleDOMNodeRemoved =  (event) ->
+handleDOMNodeRemoved = (event) ->
       targetId = Weinre.nodeStore.checkNodeId(event.target)
       parentId = Weinre.nodeStore.checkNodeId(event.relatedNode)
-      return  unless parentId
+      return unless parentId
 
       if targetId
           Weinre.wi.DOMNotify.childNodeRemoved parentId, targetId
@@ -196,9 +196,9 @@ handleDOMNodeRemoved =  (event) ->
           Weinre.wi.DOMNotify.childNodeCountUpdated parentId, childCount
 
 #-------------------------------------------------------------------------------
-handleDOMAttrModified =  (event) ->
+handleDOMAttrModified = (event) ->
       targetId = Weinre.nodeStore.checkNodeId(event.target)
-      return  unless targetId
+      return unless targetId
       attrs = []
       i = 0
 
@@ -210,9 +210,9 @@ handleDOMAttrModified =  (event) ->
       Weinre.wi.DOMNotify.attributesUpdated targetId, attrs
 
 #-------------------------------------------------------------------------------
-handleDOMCharacterDataModified =  (event) ->
+handleDOMCharacterDataModified = (event) ->
       targetId = Weinre.nodeStore.checkNodeId(event.target)
-      return  unless targetId
+      return unless targetId
       Weinre.wi.DOMNotify.characterDataModified targetId, event.newValue
 
 #-------------------------------------------------------------------------------

@@ -32,7 +32,7 @@ module.exports = class IDGenerator
         nextId()
 
 #-------------------------------------------------------------------------------
-nextId =  () ->
+nextId = () ->
       result = nextIdValue
       nextIdValue += 1
       result

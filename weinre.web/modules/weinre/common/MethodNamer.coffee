@@ -12,12 +12,14 @@ module.exports = class MethodNamer
         for own key, val of aClass
             if typeof(val) is "function"
                 val.signature   = "#{aClass.name}::#{key}"
-                val.displayName = "#{key}"
+                val.displayName = key
+                val.name        = key
 
         for own key, val of aClass.prototype
             if typeof(val) is "function"
                 val.signature   = "#{aClass.name}.#{key}"
-                val.displayName = "#{key}"
+                val.displayName = key
+                val.name        = key
 
 #-------------------------------------------------------------------------------
 MethodNamer.setNamesForClass(module.exports)

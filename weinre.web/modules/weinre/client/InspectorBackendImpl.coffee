@@ -40,11 +40,11 @@ module.exports = class InspectorBackendImpl
             proxy = Weinre.messageDispatcher.createProxy(intfName)
 
             if window[intfName]
-                throw new Ex(arguments, "backend interface '" + intfName + "' already created")
+                throw new Ex(arguments, "backend interface '#{intfName}' already created")
 
             intf = IDLTools.getIDL(intfName)
             unless intf
-                throw new Ex(arguments, "interface not registered: '" + intfName + "'")
+                throw new Ex(arguments, "interface not registered: '#{intfName}'")
 
             window[intfName] = {}
             for method in intf.methods
@@ -63,7 +63,7 @@ module.exports = class InspectorBackendImpl
 
     #---------------------------------------------------------------------------
     getRegisteredDomainDispatcher: (name) ->
-        return null  unless @registeredDomainDispatchers.hasOwnProperty(name)
+        return null unless @registeredDomainDispatchers.hasOwnProperty(name)
         @registeredDomainDispatchers[name]
 
 #-------------------------------------------------------------------------------

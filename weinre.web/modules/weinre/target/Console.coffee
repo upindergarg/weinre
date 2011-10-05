@@ -48,7 +48,7 @@ module.exports = class Console
 
     #---------------------------------------------------------------------------
     @useRemote: (value) ->
-        return UsingRemote  if arguments.length == 0
+        return UsingRemote if arguments.length == 0
 
         oldValue = UsingRemote
         UsingRemote = not not value

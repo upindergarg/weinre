@@ -35,16 +35,16 @@ module.exports = class IDLTools
 
         for intfName of IDLs
             intf = IDLs[intfName]
-            results.push intf  if intfName.match(regex)
+            results.push intf if intfName.match(regex)
 
         results
 
     #---------------------------------------------------------------------------
     @validateAgainstIDL: (klass, interfaceName) ->
         intf          = IDLTools.getIDL(interfaceName)
-        messagePrefix = "IDL validation for " + interfaceName + ": "
+        messagePrefix = "IDL validation for #{interfaceName}: "
         if null == intf
-            throw new Ex(arguments, messagePrefix + "idl not found: '" + interfaceName + "'")
+            throw new Ex(arguments, messagePrefix + "idl not found: '#{interfaceName}'")
 
         errors = []
         for intfMethod in intf.methods
@@ -52,24 +52,24 @@ module.exports = class IDLTools
             printName = klass.name + "::" + intfMethod.name
 
             if null == classMethod
-                errors.push messagePrefix + "method not implemented: '" + printName + "'"
+                errors.push messagePrefix + "method not implemented: '#{printName}'"
                 continue
 
             unless classMethod.length == intfMethod.parameters.length
                 unless classMethod.length == intfMethod.parameters.length + 1
-                    errors.push messagePrefix + "wrong number of parameters: '" + printName + "'"
+                    errors.push messagePrefix + "wrong number of parameters: '#{printName}'"
                     continue
 
         for propertyName of klass::
-            continue  if klass::hasOwnProperty(propertyName)
-            continue  if propertyName.match(/^_.*/)
+            continue if klass::hasOwnProperty(propertyName)
+            continue if propertyName.match(/^_.*/)
             printName = klass.name + "::" + propertyName
 
             unless intf.methods[propertyName]
-                errors.push messagePrefix + "method should not be implemented: '" + printName + "'"
+                errors.push messagePrefix + "method should not be implemented: '#{printName}'"
                 continue
 
-        return  unless errors.length
+        return unless errors.length
 
         for error in errors
             require("./Weinre").logError error
@@ -77,16 +77,16 @@ module.exports = class IDLTools
     #---------------------------------------------------------------------------
     @buildProxyForIDL: (proxyObject, interfaceName) ->
         intf = IDLTools.getIDL(interfaceName)
-        messagePrefix = "building proxy for IDL " + interfaceName + ": "
+        messagePrefix = "building proxy for IDL #{interfaceName}: "
 
         if null == intf
-            throw new Ex(arguments, messagePrefix + "idl not found: '" + interfaceName + "'")
+            throw new Ex(arguments, messagePrefix + "idl not found: '#{interfaceName}'")
 
         for intfMethod in intf.methods
             proxyObject[intfMethod.name] = getProxyMethod(intf, intfMethod)
 
 #-------------------------------------------------------------------------------
-getProxyMethod =  (intf, method) ->
+getProxyMethod = (intf, method) ->
       result = proxyMethod = ->
 
           callbackId = null

@@ -60,7 +60,7 @@ module.exports = class Timeline
 
     #---------------------------------------------------------------------------
     @addRecord_Mark: (message) ->
-        return  unless Timeline.isRunning()
+        return unless Timeline.isRunning()
 
         record = {}
         record.type      = TimelineRecordType.Mark
@@ -74,9 +74,9 @@ module.exports = class Timeline
 
     #---------------------------------------------------------------------------
     @addRecord_EventDispatch: (event, name, category) ->
-        return  unless Timeline.isRunning()
+        return unless Timeline.isRunning()
 
-        category = "scripting"  unless category
+        category = "scripting" unless category
         record = {}
         record.type      = TimelineRecordType.EventDispatch
         record.category  = name: category
@@ -87,7 +87,7 @@ module.exports = class Timeline
 
     #---------------------------------------------------------------------------
     @addRecord_TimerInstall: (id, timeout, singleShot) ->
-        return  unless Timeline.isRunning()
+        return unless Timeline.isRunning()
 
         record = {}
         record.type      = TimelineRecordType.TimerInstall
@@ -104,7 +104,7 @@ module.exports = class Timeline
 
     #---------------------------------------------------------------------------
     @addRecord_TimerRemove: (id, timeout, singleShot) ->
-        return  unless Timeline.isRunning()
+        return unless Timeline.isRunning()
 
         record = {}
         record.type      = TimelineRecordType.TimerRemove
@@ -120,7 +120,7 @@ module.exports = class Timeline
 
     #---------------------------------------------------------------------------
     @addRecord_TimerFire: (id, timeout, singleShot) ->
-        return  unless Timeline.isRunning()
+        return unless Timeline.isRunning()
 
         record = {}
         record.type      = TimelineRecordType.TimerFire
@@ -135,7 +135,7 @@ module.exports = class Timeline
 
     #---------------------------------------------------------------------------
     @addRecord_XHRReadyStateChange: (method, url, id, xhr) ->
-        return  unless Timeline.isRunning()
+        return unless Timeline.isRunning()
 
         if xhr.readyState == XMLHttpRequest.OPENED
             record =
@@ -233,8 +233,8 @@ module.exports = class Timeline
 
 
 #-------------------------------------------------------------------------------
-addStackTrace =  (record, skip) ->
-      skip = 1  unless skip
+addStackTrace = (record, skip) ->
+      skip = 1 unless skip
       trace = new StackTrace(arguments).trace
       record.stackTrace = []
       i = skip
@@ -247,7 +247,7 @@ addStackTrace =  (record, skip) ->
           i++
 
 #-------------------------------------------------------------------------------
-wrapped_setInterval =  (code, interval) ->
+wrapped_setInterval = (code, interval) ->
       code = instrumentedTimerCode(code, interval, false)
 
       id = Native.setInterval(code, interval)
@@ -257,7 +257,7 @@ wrapped_setInterval =  (code, interval) ->
       id
 
 #-------------------------------------------------------------------------------
-wrapped_setTimeout =  (code, delay) ->
+wrapped_setTimeout = (code, delay) ->
       code = instrumentedTimerCode(code, delay, true)
 
       id = Native.setTimeout(code, delay)
@@ -267,21 +267,21 @@ wrapped_setTimeout =  (code, delay) ->
       id
 
 #-------------------------------------------------------------------------------
-wrapped_clearInterval =  (id) ->
+wrapped_clearInterval = (id) ->
       result = Native.clearInterval(id)
       removeTimer id, false
 
       result
 
 #-------------------------------------------------------------------------------
-wrapped_clearTimeout =  (id) ->
+wrapped_clearTimeout = (id) ->
       result = Native.clearTimeout(id)
       removeTimer id, true
 
       result
 
 #-------------------------------------------------------------------------------
-addTimer =  (id, timeout, singleShot) ->
+addTimer = (id, timeout, singleShot) ->
       timerSet = (if singleShot then TimerTimeouts else TimerIntervals)
 
       timerSet[id] =
@@ -292,17 +292,17 @@ addTimer =  (id, timeout, singleShot) ->
       Timeline.addRecord_TimerInstall id, timeout, singleShot
 
 #-------------------------------------------------------------------------------
-removeTimer =  (id, singleShot) ->
+removeTimer = (id, singleShot) ->
       timerSet = (if singleShot then TimerTimeouts else TimerIntervals)
       timer = timerSet[id]
-      return  unless timer
+      return unless timer
 
       Timeline.addRecord_TimerRemove id, timer.timeout, singleShot
       delete timerSet[id]
 
 #-------------------------------------------------------------------------------
-instrumentedTimerCode =  (code, timeout, singleShot) ->
-      return code  unless typeof (code) == "function"
+instrumentedTimerCode = (code, timeout, singleShot) ->
+      return code unless typeof (code) == "function"
 
       instrumentedCode = ->
           result = code()
@@ -313,7 +313,7 @@ instrumentedTimerCode =  (code, timeout, singleShot) ->
       instrumentedCode
 
 #-------------------------------------------------------------------------------
-wrapped_XMLHttpRequest =  () ->
+wrapped_XMLHttpRequest = () ->
       xhr = new Native.XMLHttpRequest()
       IDGenerator.getId xhr
       xhr.addEventListener "readystatechange", getXhrEventHandler(xhr), false
@@ -326,7 +326,7 @@ wrapped_XMLHttpRequest.LOADING          = 3
 wrapped_XMLHttpRequest.DONE             = 4
 
 #-------------------------------------------------------------------------------
-wrapped_XMLHttpRequest_open =  () ->
+wrapped_XMLHttpRequest_open = () ->
       xhr = this
 
       xhr.__weinre_method = arguments[0]
@@ -336,7 +336,7 @@ wrapped_XMLHttpRequest_open =  () ->
       result
 
 #-------------------------------------------------------------------------------
-getXhrEventHandler =  (xhr) ->
+getXhrEventHandler = (xhr) ->
       (event) ->
           Timeline.addRecord_XHRReadyStateChange xhr.__weinre_method, xhr.__weinre_url, IDGenerator.getId(xhr), xhr
 

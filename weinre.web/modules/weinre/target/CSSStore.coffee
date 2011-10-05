@@ -38,8 +38,8 @@ module.exports = class CSSStore
 
     #---------------------------------------------------------------------------
     getComputedStyle: (node) ->
-        return {}  unless node
-        return {}  unless node.nodeType == Node.ELEMENT_NODE
+        return {} unless node
+        return {} unless node.nodeType == Node.ELEMENT_NODE
 
         styleObject = @_buildMirrorForStyle(window.getComputedStyle(node), false)
         styleObject
@@ -49,10 +49,10 @@ module.exports = class CSSStore
         result = []
 
         for styleSheet in document.styleSheets
-            continue  unless styleSheet.cssRules
+            continue unless styleSheet.cssRules
 
             for cssRule in styleSheet.cssRules
-                continue  unless _elementMatchesSelector(node, cssRule.selectorText)
+                continue unless _elementMatchesSelector(node, cssRule.selectorText)
                 object = {}
                 object.ruleId = @_getStyleRuleId(cssRule)
                 object.selectorText = cssRule.selectorText
@@ -126,7 +126,7 @@ module.exports = class CSSStore
     #---------------------------------------------------------------------------
     _removePropertyFromMirror: (mirror, index) ->
         properties = mirror.cssProperties
-        return  if index >= properties.length
+        return if index >= properties.length
         property = properties[index]
         properties[index] = null
 
@@ -145,7 +145,7 @@ module.exports = class CSSStore
         i = 0
 
         while i < properties.length
-            newProperties.push properties[i]  if properties[i]
+            newProperties.push properties[i] if properties[i]
             i++
 
         mirror.cssProperties = newProperties
@@ -164,7 +164,7 @@ module.exports = class CSSStore
 
         cssProperty = mirror.cssProperties[propertyIndex]
         unless cssProperty
-            Weinre.logWarning "requested property not available: " + styleId + ": " + propertyIndex
+            Weinre.logWarning "requested property not available: #{styleId}: " + propertyIndex
             return null
 
         if disable
@@ -182,9 +182,9 @@ module.exports = class CSSStore
         cssText = ""
 
         for property in cssProperties
-            continue  unless property.parsedOk
-            continue  if property.status == "disabled"
-            continue  if property.shorthandName
+            continue unless property.parsedOk
+            continue if property.status == "disabled"
+            continue if property.shorthandName
 
             cssText += property.name + ": " + property.value
             if property.priority == "important"
@@ -200,7 +200,7 @@ module.exports = class CSSStore
           properties: {}
           cssProperties: []
 
-        return result  unless styleDecl
+        return result unless styleDecl
         if bind
           result.styleId = @_getStyleDeclId(styleDecl)
           styleDecl.__weinre__mirror = result
@@ -264,7 +264,7 @@ module.exports = class CSSStore
 
         propertyPattern = /\s*(.+)\s*:\s*(.+)\s*(!important)?\s*;/
         match = propertyPattern.exec(string)
-        return null  unless match
+        return null unless match
 
         match[3] = (if (match[3] == "!important") then "important" else "")
 
@@ -310,25 +310,25 @@ module.exports = class CSSStore
         _getMappableId styleDecl, @styleDeclMap
 
 #-------------------------------------------------------------------------------
-_getMappableObject =  (id, map) ->
+_getMappableObject = (id, map) ->
       map[id]
 
 #-------------------------------------------------------------------------------
-_getMappableId =  (object, map) ->
+_getMappableId = (object, map) ->
       IDGenerator.getId object, map
 
 #-------------------------------------------------------------------------------
-_mozMatchesSelector =  (element, selector) ->
-      return false  unless element.mozMatchesSelector
+_mozMatchesSelector = (element, selector) ->
+      return false unless element.mozMatchesSelector
       element.mozMatchesSelector selector
 
 #-------------------------------------------------------------------------------
-_webkitMatchesSelector =  (element, selector) ->
-      return false  unless element.webkitMatchesSelector
+_webkitMatchesSelector = (element, selector) ->
+      return false unless element.webkitMatchesSelector
       element.webkitMatchesSelector selector
 
 #-------------------------------------------------------------------------------
-_fallbackMatchesSelector =  (element, selector) ->
+_fallbackMatchesSelector = (element, selector) ->
       false
 
 #-------------------------------------------------------------------------------

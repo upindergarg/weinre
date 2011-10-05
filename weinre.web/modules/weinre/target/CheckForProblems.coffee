@@ -15,13 +15,13 @@ module.exports = class CheckForProblems
         checkForOldPrototypeVersion()
 
 #-------------------------------------------------------------------------------
-checkForOldPrototypeVersion =  () ->
+checkForOldPrototypeVersion = () ->
       badVersion = false
-      return  if typeof Prototype == "undefined"
-      return  unless Prototype.Version
+      return if typeof Prototype == "undefined"
+      return unless Prototype.Version
 
-      badVersion = true  if Prototype.Version.match(/^1\.5.*/)
-      badVersion = true  if Prototype.Version.match(/^1\.6.*/)
+      badVersion = true if Prototype.Version.match(/^1\.5.*/)
+      badVersion = true if Prototype.Version.match(/^1\.6.*/)
 
       if badVersion
           alert "Sorry, weinre is not support in versions of Prototype earlier than 1.7"

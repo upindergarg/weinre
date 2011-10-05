@@ -15,7 +15,7 @@ module.exports = class WiDOMStorageImpl
     constructor: ->
 
     #---------------------------------------------------------------------------
-    getDOMStorageEntries: ( storageId, callback) ->
+    getDOMStorageEntries: (storageId, callback) ->
         storageArea = _getStorageArea(storageId)
 
         unless storageArea
@@ -36,7 +36,7 @@ module.exports = class WiDOMStorageImpl
             Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
-    setDOMStorageItem: ( storageId,  key,  value, callback) ->
+    setDOMStorageItem: (storageId, key, value, callback) ->
         storageArea = _getStorageArea(storageId)
 
         unless storageArea
@@ -47,7 +47,7 @@ module.exports = class WiDOMStorageImpl
         try
             if storageArea == window.localStorage
                 Native.LocalStorage_setItem key, value
-            else Native.SessionStorage_setItem key, value  if storageArea == window.sessionStorage
+            else Native.SessionStorage_setItem key, value if storageArea == window.sessionStorage
         catch e
             result = false
 
@@ -55,7 +55,7 @@ module.exports = class WiDOMStorageImpl
             Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
-    removeDOMStorageItem: ( storageId,  key, callback) ->
+    removeDOMStorageItem: (storageId, key, callback) ->
         storageArea = _getStorageArea(storageId)
 
         unless storageArea
@@ -72,7 +72,7 @@ module.exports = class WiDOMStorageImpl
         catch e
             result = false
 
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ] if callback
 
     #---------------------------------------------------------------------------
     initialize: ->
@@ -115,15 +115,15 @@ module.exports = class WiDOMStorageImpl
         document.addEventListener "storage", _storageEventHandler, false
 
 #-------------------------------------------------------------------------------
-_getStorageArea =  (storageId) ->
+_getStorageArea = (storageId) ->
       if storageId == 1
           return window.localStorage
-      else return window.sessionStorage  if storageId == 2
+      else return window.sessionStorage if storageId == 2
 
       null
 
 #-------------------------------------------------------------------------------
-_storageEventHandler =  (event) ->
+_storageEventHandler = (event) ->
       if event.storageArea == window.localStorage
           storageId = 1
       else if event.storageArea == window.sessionStorage

@@ -26,7 +26,7 @@ module.exports = class ConnectorList
 
     #---------------------------------------------------------------------------
     add: (connector) ->
-        return  if @connectors[connector.channel]
+        return if @connectors[connector.channel]
 
         @connectors[connector.channel] = connector
 
@@ -49,10 +49,10 @@ module.exports = class ConnectorList
     getNewestConnectorChannel: (ignoring) ->
         newest = 0
         for connectorChannel of @connectors
-            continue  if connectorChannel == ignoring
-            newest = connectorChannel  if connectorChannel > newest
+            continue if connectorChannel == ignoring
+            newest = connectorChannel if connectorChannel > newest
 
-        return null  if newest == 0
+        return null if newest == 0
         newest
 
     #---------------------------------------------------------------------------
@@ -60,8 +60,8 @@ module.exports = class ConnectorList
         i = 0
 
         for childNode in @ulConnectors.childNodes
-            continue  if null == childNode.connectorChannel
-            return childNode  if childNode.connectorChannel < connector.channel
+            continue if null == childNode.connectorChannel
+            return childNode if childNode.connectorChannel < connector.channel
 
         null
 
@@ -70,10 +70,10 @@ module.exports = class ConnectorList
         self = this
 
         element = @getConnectorElement(channel)
-        return  unless element
+        return unless element
 
         connector = @connectors[channel]
-        connector.closed = true  if connector
+        connector.closed = true if connector
         delete @connectors[channel]
 
         if fast
@@ -88,7 +88,7 @@ module.exports = class ConnectorList
     #---------------------------------------------------------------------------
     _remove: (element) ->
         @ulConnectors.removeChild element
-        @noneItem.style.display = "list-item"  if @getConnectors().length == 0
+        @noneItem.style.display = "list-item" if @getConnectors().length == 0
 
     #---------------------------------------------------------------------------
     removeAll: () ->
@@ -100,7 +100,7 @@ module.exports = class ConnectorList
         result = []
 
         for channel of @connectors
-            continue  unless @connectors.hasOwnProperty(channel)
+            continue unless @connectors.hasOwnProperty(channel)
             result.push @connectors[channel]
 
         result
@@ -108,7 +108,7 @@ module.exports = class ConnectorList
     #---------------------------------------------------------------------------
     getConnectorElement: (channel) ->
         connector = @connectors[channel]
-        return null  unless connector
+        return null unless connector
         connector.element
 
     #---------------------------------------------------------------------------
@@ -117,7 +117,7 @@ module.exports = class ConnectorList
             connector.element.removeStyleClass "current"
 
         element = @getConnectorElement(channel)
-        return  if null == element
+        return if null == element
         element.addStyleClass "current"
 
     #---------------------------------------------------------------------------
@@ -127,7 +127,7 @@ module.exports = class ConnectorList
         else
             element = channel
 
-        return  unless element
+        return unless element
         element.removeStyleClass "error"
         element.removeStyleClass "closed"
         element.removeStyleClass "connected"

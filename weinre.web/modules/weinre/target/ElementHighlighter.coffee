@@ -40,8 +40,8 @@ module.exports = class ElementHighlighter
 
     #---------------------------------------------------------------------------
     on: (element) ->
-        return  if null == element
-        return  unless element.nodeType == Node.ELEMENT_NODE
+        return if null == element
+        return unless element.nodeType == Node.ELEMENT_NODE
 
         @calculateMetrics element
         @boxMargin.style.display = "block"
@@ -72,7 +72,7 @@ module.exports = class ElementHighlighter
         @boxContent.style.right  = metrics.paddingRight + "px"
 
 #-------------------------------------------------------------------------------
-getMetrics =  (element) ->
+getMetrics = (element) ->
       result = {}
       left = 0
       top  = 0
@@ -112,7 +112,7 @@ getMetrics =  (element) ->
       result
 
 #-------------------------------------------------------------------------------
-fromPx =  (string) ->
+fromPx = (string) ->
       parseInt string.replace(/px$/, "")
 
 #-------------------------------------------------------------------------------

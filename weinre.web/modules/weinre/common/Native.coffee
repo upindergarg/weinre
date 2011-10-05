@@ -34,7 +34,10 @@ exports.LocalStorage_clear        = -> exports.original.LocalStorage_clear.apply
 exports.SessionStorage_setItem    = -> exports.original.SessionStorage_setItem.apply(    window.sessionStorage, [].slice.call(arguments))
 exports.SessionStorage_removeItem = -> exports.original.SessionStorage_removeItem.apply( window.sessionStorage, [].slice.call(arguments))
 exports.SessionStorage_clear      = -> exports.original.SessionStorage_clear.apply(      window.sessionStorage, [].slice.call(arguments))
-exports.openDatabase              = -> exports.original.openDatabase.apply( window, [].slice.call(arguments))
+exports.openDatabase              = -> exports.original.openDatabase.apply(              window,                [].slice.call(arguments))
 
-#-------------------------------------------------------------------------------
-require("../common/MethodNamer").setNamesForClass(module.exports)
+for own key, val of exports
+    if typeof(val) is "function"
+        val.signature   = "Native::#{key}"
+        val.displayName = key
+        val.name        = key

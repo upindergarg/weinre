@@ -24,31 +24,31 @@ module.exports = class WeinreClientEventsImpl
 
     #---------------------------------------------------------------------------
     clientRegistered: (clientDescription) ->
-        WebInspector.panels.remote.addClient clientDescription  if @client.uiAvailable()
+        WebInspector.panels.remote.addClient clientDescription if @client.uiAvailable()
 
     #---------------------------------------------------------------------------
     targetRegistered: (targetDescription) ->
-        WebInspector.panels.remote.addTarget targetDescription  if @client.uiAvailable()
-        return  unless Weinre.client.autoConnect()
-        return  unless Weinre.messageDispatcher
+        WebInspector.panels.remote.addTarget targetDescription if @client.uiAvailable()
+        return unless Weinre.client.autoConnect()
+        return unless Weinre.messageDispatcher
 
         Weinre.WeinreClientCommands.connectTarget Weinre.messageDispatcher.channel, targetDescription.channel
 
     #---------------------------------------------------------------------------
-    clientUnregistered: ( clientChannel) ->
-        WebInspector.panels.remote.removeClient clientChannel  if @client.uiAvailable()
+    clientUnregistered: (clientChannel) ->
+        WebInspector.panels.remote.removeClient clientChannel if @client.uiAvailable()
 
     #---------------------------------------------------------------------------
-    targetUnregistered: ( targetChannel) ->
-        WebInspector.panels.remote.removeTarget targetChannel  if @client.uiAvailable()
+    targetUnregistered: (targetChannel) ->
+        WebInspector.panels.remote.removeTarget targetChannel if @client.uiAvailable()
 
     #---------------------------------------------------------------------------
-    connectionCreated: ( clientChannel,  targetChannel) ->
+    connectionCreated: (clientChannel, targetChannel) ->
         if @client.uiAvailable()
             WebInspector.panels.remote.setClientState clientChannel, "connected"
             WebInspector.panels.remote.setTargetState targetChannel, "connected"
 
-        return  unless clientChannel == Weinre.messageDispatcher.channel
+        return unless clientChannel == Weinre.messageDispatcher.channel
 
         WebInspector.panels.elements.reset()
         WebInspector.panels.timeline._clearPanel()
@@ -62,30 +62,30 @@ module.exports = class WeinreClientEventsImpl
             WeinreExtraTargetEventsImpl.addDatabaseRecords databaseRecords
 
     #---------------------------------------------------------------------------
-    connectionDestroyed: ( clientChannel,  targetChannel) ->
+    connectionDestroyed: (clientChannel, targetChannel) ->
         if @client.uiAvailable()
             WebInspector.panels.remote.setClientState clientChannel, "not-connected"
             WebInspector.panels.remote.setTargetState targetChannel, "not-connected"
 
-        return  unless clientChannel == Weinre.messageDispatcher.channel
+        return unless clientChannel == Weinre.messageDispatcher.channel
 
         document.title = titleNotConnected
-        return  unless Weinre.client.autoConnect()
-        return  unless @client.uiAvailable()
+        return unless Weinre.client.autoConnect()
+        return unless @client.uiAvailable()
 
         nextTargetChannel = WebInspector.panels.remote.getNewestTargetChannel(targetChannel)
-        return  unless nextTargetChannel
+        return unless nextTargetChannel
 
         Weinre.WeinreClientCommands.connectTarget Weinre.messageDispatcher.channel, nextTargetChannel
         Weinre.logInfo "autoconnecting to " + nextTargetChannel
 
     #---------------------------------------------------------------------------
-    sendCallback: ( callbackId,  result) ->
+    sendCallback: (callbackId, result) ->
         Callback.invoke callbackId, result
 
     #---------------------------------------------------------------------------
-    serverProperties: ( properties) ->
-        WebInspector.panels.remote.setServerProperties properties  if @client.uiAvailable()
+    serverProperties: (properties) ->
+        WebInspector.panels.remote.setServerProperties properties if @client.uiAvailable()
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

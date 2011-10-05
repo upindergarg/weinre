@@ -44,7 +44,7 @@ module.exports = class Target
 
     #----------------------------------------------------------------------------
     setWeinreServerURLFromScriptSrc: (element) ->
-        return  if window.WeinreServerURL
+        return if window.WeinreServerURL
 
         if element
             pattern = /(http:\/\/(.*?)\/)/
@@ -59,7 +59,7 @@ module.exports = class Target
 
     #---------------------------------------------------------------------------
     setWeinreServerIdFromScriptSrc: (element) ->
-        return  if window.WeinreServerId
+        return if window.WeinreServerId
 
         element = @getTargetScriptElement()
         hash    = "anonymous"
@@ -70,7 +70,7 @@ module.exports = class Target
                 hash = attempt
             else
                 attempt = location.hash.split("#")[1]
-                hash = attempt  if attempt
+                hash = attempt if attempt
 
         window.WeinreServerId = hash
 
@@ -84,7 +84,7 @@ module.exports = class Target
             element = elements[i]
             j = 0
             while j < scripts.length
-                return element  unless -1 == element.src.indexOf("/" + scripts[j])
+                return element unless -1 == element.src.indexOf("/" + scripts[j])
                 j++
             i++
 
@@ -97,7 +97,7 @@ module.exports = class Target
         @setWeinreServerURLFromScriptSrc element
         @setWeinreServerIdFromScriptSrc element
 
-        window.WeinreServerURL += "/"  unless window.WeinreServerURL[window.WeinreServerURL.length - 1] == "/"
+        window.WeinreServerURL += "/" unless window.WeinreServerURL[window.WeinreServerURL.length - 1] == "/"
         injectedScriptHost = new InjectedScriptHostImpl()
         Weinre.injectedScript = injectedScriptConstructor(injectedScriptHost, window, 0, "?")
 
@@ -167,7 +167,7 @@ module.exports = class Target
         lineno   = event.lineno   or "[unknown lineno]"
         message  = event.message  or "[unknown message]"
 
-        Weinre.logError "error occurred: " + filename + ":" + lineno + ": " + message
+        Weinre.logError "error occurred: #{filename}:#{lineno}: " + message
 
     #---------------------------------------------------------------------------
     cb_webSocketOpened: () ->
@@ -194,7 +194,7 @@ module.exports = class Target
         Weinre.wi.DOMNotify.setDocument nodeData
 
 #-------------------------------------------------------------------------------
-currentTime =  () ->
+currentTime = () ->
       (new Date().getMilliseconds()) / 1000.0
 
 

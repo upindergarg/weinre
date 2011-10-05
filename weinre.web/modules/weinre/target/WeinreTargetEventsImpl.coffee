@@ -16,8 +16,8 @@ module.exports = class WeinreTargetEventsImpl
     constructor: ->
 
     #---------------------------------------------------------------------------
-    connectionCreated: ( clientChannel,  targetChannel) ->
-        message = "weinre: target " + targetChannel + " connected to client " + clientChannel
+    connectionCreated: (clientChannel, targetChannel) ->
+        message = "weinre: target #{targetChannel} connected to client " + clientChannel
         Weinre.logInfo message
 
         oldValue = Console.useRemote(true)
@@ -26,14 +26,14 @@ module.exports = class WeinreTargetEventsImpl
         Weinre.wi.DOMStorage.initialize()
 
     #---------------------------------------------------------------------------
-    connectionDestroyed: ( clientChannel,  targetChannel) ->
-        message = "weinre: target " + targetChannel + " disconnected from client " + clientChannel
+    connectionDestroyed: (clientChannel, targetChannel) ->
+        message = "weinre: target #{targetChannel} disconnected from client " + clientChannel
         Weinre.logInfo message
 
         oldValue = Console.useRemote(false)
 
     #---------------------------------------------------------------------------
-    sendCallback: ( callbackId,  result) ->
+    sendCallback: (callbackId, result) ->
         Callback.invoke callbackId, result
 
 #-------------------------------------------------------------------------------

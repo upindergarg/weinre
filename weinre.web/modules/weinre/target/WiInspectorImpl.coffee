@@ -16,11 +16,11 @@ module.exports = class WiInspectorImpl
 
     #---------------------------------------------------------------------------
     reloadPage: (callback) ->
-        Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback if callback
         window.location.reload()
 
     #---------------------------------------------------------------------------
-    highlightDOMNode: ( nodeId, callback) ->
+    highlightDOMNode: (nodeId, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
 
         unless node
@@ -28,24 +28,24 @@ module.exports = class WiInspectorImpl
             return
 
         Weinre.elementHighlighter.on node
-        Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback if callback
 
     #---------------------------------------------------------------------------
     hideDOMNodeHighlight: (callback) ->
         Weinre.elementHighlighter.off()
-        Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback if callback
 
     #---------------------------------------------------------------------------
     startTimelineProfiler: (callback) ->
         Timeline.start()
         Weinre.wi.TimelineNotify.timelineProfilerWasStarted()
-        Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback if callback
 
     #---------------------------------------------------------------------------
     stopTimelineProfiler: (callback) ->
         Timeline.stop()
         Weinre.wi.TimelineNotify.timelineProfilerWasStopped()
-        Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
+        Weinre.WeinreTargetCommands.sendClientCallback callback if callback
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

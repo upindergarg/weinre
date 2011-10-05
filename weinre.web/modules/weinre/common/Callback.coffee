@@ -24,22 +24,24 @@ module.exports = class Callback
 
     #---------------------------------------------------------------------------
     @register: (callback) ->
-        callback = [ null, callback ]  if typeof callback == "function"
+        callback = [ null, callback ] if typeof callback == "function"
         unless typeof callback.slice == "function"
             throw new Ex(arguments, "callback must be an array or function")
 
         receiver = callback[0]
         func = callback[1]
         data = callback.slice(2)
-        func = receiver.func  if typeof func == "string"
+        func = receiver[func] if typeof func == "string"
 
         unless typeof func == "function"
             throw new Ex(arguments, "callback function was null or not found")
 
         index = ConnectorChannel + "::" + CallbackIndex
+
         CallbackIndex++
-        CallbackIndex = 1  if CallbackIndex >= 65536 * 65536
+        CallbackIndex = 1 if CallbackIndex >= 65536 * 65536
         CallbackTable[index] = [ receiver, func, data ]
+
         index
 
     #---------------------------------------------------------------------------
@@ -51,7 +53,7 @@ module.exports = class Callback
         callback = CallbackTable[index]
 
         unless callback
-            throw new Ex(arguments, "callback " + index + " not registered or already invoked")
+            throw new Ex(arguments, "callback #{index} not registered or already invoked")
 
         receiver = callback[0]
         func = callback[1]
@@ -60,9 +62,9 @@ module.exports = class Callback
         try
             func.apply receiver, args
         catch e
-            funcName = func.name
-            funcName = "<unnamed>"  unless funcName
-            require("./Weinre").logError arguments.callee.signature + " exception invoking callback: " + funcName + "(" + args.join(",") + "): " + e
+            funcName = func.name || func.signature
+            funcName = "<unnamed>" unless funcName
+            require("./Weinre").logError arguments.callee.signature + " exception invoking callback: #{funcName}(#{args.join(',')}): " + e
         finally
             Callback.deregister index
 

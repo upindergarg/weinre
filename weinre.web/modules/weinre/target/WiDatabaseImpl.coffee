@@ -18,7 +18,7 @@ name2db = {}
 module.exports = class WiDatabaseImpl
 
     constructor: ->
-        return  unless window.openDatabase
+        return unless window.openDatabase
         window.openDatabase = wrappedOpenDatabase
 
     #---------------------------------------------------------------------------
@@ -29,18 +29,18 @@ module.exports = class WiDatabaseImpl
         result
 
     #---------------------------------------------------------------------------
-    getDatabaseTableNames: ( databaseId, callback) ->
+    getDatabaseTableNames: (databaseId, callback) ->
         db = dbById(databaseId)
-        return  unless db
+        return unless db
 
         stepper = SqlStepper([ getTableNames_step_1, getTableNames_step_2 ])
         stepper.callback = callback
         stepper.run db, logSqlError
 
     #---------------------------------------------------------------------------
-    executeSQL: ( databaseId,  query, callback) ->
+    executeSQL: (databaseId, query, callback) ->
         db = dbById(databaseId)
-        return  unless db
+        return unless db
 
         txid = Weinre.targetDescription.channel + "-" + IDGenerator.next()
 
@@ -55,15 +55,15 @@ module.exports = class WiDatabaseImpl
             Weinre.WeinreTargetCommands.sendClientCallback callback, [ true, txid ]
 
 #-------------------------------------------------------------------------------
-logSqlError =  (sqlError) ->
-      console.log "SQL Error " + sqlError.code + ": " + sqlError.message
+logSqlError = (sqlError) ->
+      console.log "SQL Error #{sqlError.code}: " + sqlError.message
 
 #-------------------------------------------------------------------------------
-getTableNames_step_1 =  () ->
+getTableNames_step_1 = () ->
       @executeSql "SELECT name FROM sqlite_master WHERE type='table'"
 
 #-------------------------------------------------------------------------------
-getTableNames_step_2 =  (resultSet) ->
+getTableNames_step_2 = (resultSet) ->
       rows = resultSet.rows
       result = []
 
@@ -80,11 +80,11 @@ getTableNames_step_2 =  (resultSet) ->
       Weinre.WeinreTargetCommands.sendClientCallback @callback, [ result ]
 
 #-------------------------------------------------------------------------------
-executeSQL_step_1 =  () ->
+executeSQL_step_1 = () ->
       @executeSql @query
 
 #-------------------------------------------------------------------------------
-executeSQL_step_2 =  (resultSet) ->
+executeSQL_step_2 = (resultSet) ->
       columnNames = []
       values = []
       rows = resultSet.rows
@@ -105,7 +105,7 @@ executeSQL_step_2 =  (resultSet) ->
       Weinre.wi.DatabaseNotify.sqlTransactionSucceeded @txid, columnNames, values
 
 #-------------------------------------------------------------------------------
-executeSQL_error =  (sqlError) ->
+executeSQL_error = (sqlError) ->
       error =
           code: sqlError.code
           message: sqlError.message
@@ -113,29 +113,29 @@ executeSQL_error =  (sqlError) ->
       Weinre.wi.DatabaseNotify.sqlTransactionFailed @txid, error
 
 #-------------------------------------------------------------------------------
-wrappedOpenDatabase =  (name, version, displayName, estimatedSize, creationCallback) ->
+wrappedOpenDatabase = (name, version, displayName, estimatedSize, creationCallback) ->
       db = Native.openDatabase(name, version, displayName, estimatedSize, creationCallback)
       dbAdd db, name, version
       db
 
 #-------------------------------------------------------------------------------
-dbById =  (id) ->
+dbById = (id) ->
       record = id2db[id]
-      return null  unless record
+      return null unless record
       record.db
 
 #-------------------------------------------------------------------------------
-dbRecordById =  (id) ->
+dbRecordById = (id) ->
       id2db[id]
 
 #-------------------------------------------------------------------------------
-dbRecordByName =  (name) ->
+dbRecordByName = (name) ->
       name2db[name]
 
 #-------------------------------------------------------------------------------
-dbAdd =  (db, name, version) ->
+dbAdd = (db, name, version) ->
       record = dbRecordByName(name)
-      return record  if record
+      return record if record
 
       record = {}
       record.id      = IDGenerator.next()

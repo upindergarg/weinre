@@ -31,27 +31,32 @@ module.exports = class Client
 
     #---------------------------------------------------------------------------
     initialize: ->
-        window.addEventListener "load", Binding(this, "onLoaded"), false
+        window.addEventListener 'load', Binding(this, 'onLoaded'), false
 
-        messageDispatcher = new MessageDispatcher("../ws/client", @_getId())
+        messageDispatcher = new MessageDispatcher('../ws/client', @_getId())
         Weinre.messageDispatcher = messageDispatcher
 
         InspectorBackendImpl.setupProxies()
 
-        Weinre.WeinreClientCommands      = messageDispatcher.createProxy("WeinreClientCommands")
-        Weinre.WeinreExtraClientCommands = messageDispatcher.createProxy("WeinreExtraClientCommands")
+        Weinre.WeinreClientCommands      = messageDispatcher.createProxy('WeinreClientCommands')
+        Weinre.WeinreExtraClientCommands = messageDispatcher.createProxy('WeinreExtraClientCommands')
 
-        messageDispatcher.registerInterface "WeinreExtraTargetEvents", new WeinreExtraTargetEventsImpl(), false
-        messageDispatcher.registerInterface "WebInspector", WebInspector, false
+        messageDispatcher.registerInterface(
+            'WeinreExtraTargetEvents', new WeinreExtraTargetEventsImpl(), false
+        )
+
+        messageDispatcher.registerInterface(
+            'WebInspector', WebInspector, false
+        )
 
         WebInspector.mainResource = {}
         WebInspector.mainResource.url = location.href
 
     #---------------------------------------------------------------------------
     _getId: ->
-        hash = location.href.split("#")[1]
-        return hash  if hash
-        "anonymous"
+        hash = location.href.split('#')[1]
+        return hash if hash
+        'anonymous'
 
     #---------------------------------------------------------------------------
     uiAvailable: ->
@@ -59,7 +64,7 @@ module.exports = class Client
 
     #---------------------------------------------------------------------------
     autoConnect: (value) ->
-        AutoConnect = not not value  if arguments.length >= 1
+        AutoConnect = not not value if arguments.length >= 1
         AutoConnect
 
     #---------------------------------------------------------------------------
@@ -67,21 +72,21 @@ module.exports = class Client
         WebInspector.panels.remote = new RemotePanel()
 
         panel   = WebInspector.panels.remote
-        toolbar = document.getElementById("toolbar")
+        toolbar = document.getElementById('toolbar')
 
         WebInspector.addPanelToolbarIcon toolbar, panel, toolbar.childNodes[1]
         WebInspector.panelOrder.unshift WebInspector.panelOrder.pop()
         WebInspector.currentPanel = panel
 
-        toolButtonsToHide = [ "scripts" ]
+        toolButtonsToHide = [ 'scripts' ]
         for toolButtonToHide in toolButtonsToHide
             continue unless WebInspector.panels[toolButtonToHide]
             continue unless WebInspector.panels[toolButtonToHide].toolbarItem
 
-            WebInspector.panels[toolButtonToHide].toolbarItem.style.display = "none"
+            WebInspector.panels[toolButtonToHide].toolbarItem.style.display = 'none'
 
-        button = document.getElementById("dock-status-bar-item")
-        button.style.display = "none"  if button
+        button = document.getElementById('dock-status-bar-item')
+        button.style.display = 'none' if button
 
     #---------------------------------------------------------------------------
     onLoaded: ->
@@ -90,8 +95,8 @@ module.exports = class Client
         @_installRemotePanel()
 
         messageDispatcher = Weinre.messageDispatcher
-        messageDispatcher.registerInterface "WeinreClientEvents", new WeinreClientEventsImpl(this), false
-        messageDispatcher.registerInterface "InspectorFrontendHost", InspectorFrontendHost, false
+        messageDispatcher.registerInterface 'WeinreClientEvents', new WeinreClientEventsImpl(this), false
+        messageDispatcher.registerInterface 'InspectorFrontendHost', InspectorFrontendHost, false
 
     #---------------------------------------------------------------------------
     cb_registerClient: (clientDescription) ->
@@ -101,7 +106,7 @@ module.exports = class Client
             WebInspector.panels.remote.setCurrentClient clientDescription.channel
             WebInspector.panels.remote.afterInitialConnection()
 
-        Weinre.messageDispatcher.getWebSocket().addEventListener "close", Binding(this, @cb_webSocketClosed)
+        Weinre.messageDispatcher.getWebSocket().addEventListener 'close', Binding(this, @cb_webSocketClosed)
 
     #---------------------------------------------------------------------------
     cb_webSocketClosed: ->
@@ -118,18 +123,18 @@ module.exports = class Client
         window.installWebInspectorAPIsource = installWebInspectorAPIsource
 
 #-------------------------------------------------------------------------------
-installWebInspectorAPIsource =  () ->
-      return if "webInspector" of window
+installWebInspectorAPIsource = () ->
+      return if 'webInspector' of window
 
       extensionAPI = window.parent.InspectorFrontendHost.getExtensionAPI()
-      extensionAPI = extensionAPI.replace("location.hostname + location.port", "location.hostname + ':' + location.port")
+      extensionAPI = extensionAPI.replace('location.hostname + location.port', "location.hostname + ':' + location.port")
 
       id = IDGenerator.next()
 
-      console.log "installing webInspector with injectedScriptId: " + id
+      console.log "installing webInspector with injectedScriptId: #{id}"
 
-      extensionAPI += "(null,null," + id + ")"
+      extensionAPI += "(null, null, #{id})"
       extensionAPI
 
 #-------------------------------------------------------------------------------
-require("../common/MethodNamer").setNamesForClass(module.exports)
+require('../common/MethodNamer').setNamesForClass(module.exports)

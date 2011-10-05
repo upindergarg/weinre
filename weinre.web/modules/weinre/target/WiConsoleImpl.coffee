@@ -15,7 +15,7 @@ module.exports = class WiConsoleImpl
         @messagesEnabled = true
 
     #---------------------------------------------------------------------------
-    setConsoleMessagesEnabled: ( enabled, callback) ->
+    setConsoleMessagesEnabled: (enabled, callback) ->
         oldValue = @messagesEnabled
         @messagesEnabled = enabled
         if callback
@@ -28,7 +28,7 @@ module.exports = class WiConsoleImpl
             Weinre.WeinreTargetCommands.sendClientCallback callback, []
 
     #---------------------------------------------------------------------------
-    setMonitoringXHREnabled: ( enabled, callback) ->
+    setMonitoringXHREnabled: (enabled, callback) ->
         if callback
             Weinre.WeinreTargetCommands.sendClientCallback callback, []
 

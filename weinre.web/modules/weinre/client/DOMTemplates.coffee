@@ -9,7 +9,7 @@
 Ex = require('../common/Ex')
 
 #-------------------------------------------------------------------------------
-getElementFunction =  (elementName) ->
+getElementFunction = (elementName) ->
       ->
           element = document.createElement(elementName)
 
@@ -22,22 +22,22 @@ getElementFunction =  (elementName) ->
               else if typeof argument == "object"
                   addToElement_Object element, argument
               else
-                  throw new Ex(arguments, "invalid value passed to  DOMTemplates." + elementName + "(): " + argument)
+                  throw new Ex(arguments, "invalid value passed to DOMTemplates.#{elementName}(): " + argument)
 
           element
 
 #-------------------------------------------------------------------------------
-addToElement_String =  (element, aString) ->
+addToElement_String = (element, aString) ->
       addToElement_Node element, document.createTextNode(aString)
 
 #-------------------------------------------------------------------------------
-addToElement_Node =  (element, anElement) ->
+addToElement_Node = (element, anElement) ->
       element.appendChild anElement
 
 #-------------------------------------------------------------------------------
-addToElement_Object =  (element, anObject) ->
+addToElement_Object = (element, anObject) ->
       for key of anObject
-          continue  unless anObject.hasOwnProperty(key)
+          continue unless anObject.hasOwnProperty(key)
 
           val = anObject[key]
           if key.substr(0, 1) == "$"
@@ -52,6 +52,6 @@ elementNames = elementNames.split(' ')
 
 for elementName in elementNames
     exports[elementName] = getElementFunction(elementName)
-
-#-------------------------------------------------------------------------------
-require("../common/MethodNamer").setNamesForClass(module.exports)
+    exports[elementName].name        = "#{elementName}"
+    exports[elementName].displayName = "#{elementName}"
+    exports[elementName].signature   = "DOMTemplates.#{elementName}"

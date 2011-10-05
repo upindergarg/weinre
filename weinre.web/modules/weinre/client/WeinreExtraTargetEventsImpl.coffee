@@ -16,9 +16,9 @@ module.exports = class WeinreExtraTargetEventsImpl
 
     #---------------------------------------------------------------------------
     @addDatabaseRecords: (databaseRecords) ->
-        return  unless WebInspector.panels
-        return  unless WebInspector.panels.resources
-        return  unless WebInspector.panels.resources._databases
+        return unless WebInspector.panels
+        return unless WebInspector.panels.resources
+        return unless WebInspector.panels.resources._databases
 
         existingDbs = WebInspector.panels.resources._databases
         existingDbNames = {}

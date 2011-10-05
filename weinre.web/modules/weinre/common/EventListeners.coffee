@@ -24,8 +24,8 @@ module.exports = class EventListeners
         listeners = @listeners.slice()
 
         for _listener in listeners
-            continue  unless _listener[0] == listener
-            continue  unless _listener[1] == useCapture
+            continue unless _listener[0] == listener
+            continue unless _listener[1] == useCapture
 
             @_listeners.splice i, 1
             return

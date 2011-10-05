@@ -21,7 +21,7 @@ module.exports = class MessageDispatcher
 
     #---------------------------------------------------------------------------
     constructor: (url, id) ->
-        id = "anonymous"  unless id
+        id = "anonymous" unless id
         @_url = url
         @_id = id
         @error = null
@@ -37,13 +37,13 @@ module.exports = class MessageDispatcher
 
     #---------------------------------------------------------------------------
     @verbose: (value) ->
-        Verbose = not not value  if arguments.length >= 1
+        Verbose = not not value if arguments.length >= 1
         Verbose
 
     #---------------------------------------------------------------------------
     _open: ->
-        return  if @_opened or @_opening
-        throw new Ex(arguments, "socket has already been closed")  if @_closed
+        return if @_opened or @_opening
+        throw new Ex(arguments, "socket has already been closed") if @_closed
         @_opening = true
         @_socket = new WebSocketXhr(@_url, @_id)
         @_socket.addEventListener "open", Binding(this, "_handleOpen")
@@ -53,7 +53,7 @@ module.exports = class MessageDispatcher
 
     #---------------------------------------------------------------------------
     close: ->
-        return  if @_closed
+        return if @_closed
         @_opened = false
         @_closed = true
         @_socket.close()
@@ -72,7 +72,7 @@ module.exports = class MessageDispatcher
             IDLTools.validateAgainstIDL intf.constructor, intfName
 
         if @_interfaces[intfName]
-            throw new Ex(arguments, "interface " + intfName + " has already been registered")
+            throw new Ex(arguments, "interface #{intfName} has already been registered")
 
         @_interfaces[intfName] = intf
 
@@ -102,11 +102,13 @@ module.exports = class MessageDispatcher
 
         data = JSON.stringify(data)
         @_socket.send data
-        Weinre.logDebug @constructor.name + "[" + @_url + "]: send " + intfName + "." + methodName + "(" + JSON.stringify(args) + ")"  if Verbose
+
+        if Verbose
+            Weinre.logDebug @constructor.name + "[#{@_url}]: send #{intfName}.#{methodName}(#{JSON.stringify(args)})"
 
     #---------------------------------------------------------------------------
     getState: ->
-        return "opening"  if @_opening
+        return "opening" if @_opening
         return "opened"  if @_opened
         return "closed"  if @_closed
         "unknown"
@@ -123,7 +125,7 @@ module.exports = class MessageDispatcher
         Callback.setConnectorChannel @channel
 
         if Verbose
-            Weinre.logDebug @constructor.name + "[" + @_url + "]: opened"
+            Weinre.logDebug @constructor.name + "[#{@_url}]: opened"
 
     #---------------------------------------------------------------------------
     _handleError: (message) ->
@@ -131,27 +133,29 @@ module.exports = class MessageDispatcher
         @close()
 
         if Verbose
-            Weinre.logDebug @constructor.name + "[" + @_url + "]: error: " + message
+            Weinre.logDebug @constructor.name + "[#{@_url}]: error: " + message
 
     #---------------------------------------------------------------------------
     _handleMessage: (message) ->
         try
             data = JSON.parse(message.data)
         catch e
-            throw new Ex(arguments, "invalid JSON data received: " + e + ": '" + message.data + "'")
+            throw new Ex(arguments, "invalid JSON data received: #{e}: '#{message.data}'")
 
         intfName = data["interface"]
         methodName = data.method
         args = data.args
-        methodSignature = intfName + "." + methodName + "()"
+        methodSignature = intfName + ".#{methodName}()"
         intf = @_interfaces.hasOwnProperty(intfName) and @_interfaces[intfName]
-        intf = InspectorBackend.getRegisteredDomainDispatcher(intfName.substr(0, intfName.length - 6))  if not intf and InspectorBackend and intfName.match(/.*Notify/)
+
+        if not intf and InspectorBackend and intfName.match(/.*Notify/)
+            intf = InspectorBackend.getRegisteredDomainDispatcher(intfName.substr(0, intfName.length - 6))
 
         unless intf
             Weinre.logWarning "weinre: request for non-registered interface:" + methodSignature
             return
 
-        methodSignature = intf.constructor.name + "." + methodName + "()"
+        methodSignature = intf.constructor.name + ".#{methodName}()"
         method = intf[methodName]
 
         unless typeof method == "function"
@@ -160,16 +164,16 @@ module.exports = class MessageDispatcher
         try
             method.apply intf, args
         catch e
-            Weinre.logError "weinre: invocation exception on " + methodSignature + ": " + e
+            Weinre.logError "weinre: invocation exception on #{methodSignature}: " + e
 
         if Verbose
-            Weinre.logDebug @constructor.name + "[" + @_url + "]: recv " + intfName + "." + methodName + "(" + JSON.stringify(args) + ")"
+            Weinre.logDebug @constructor.name + "[#{@_url}]: recv #{intfName}.#{methodName}(#{JSON.stringify(args)})"
 
     #---------------------------------------------------------------------------
     _handleClose: ->
         @_reallyClosed = true
         if Verbose
-            Weinre.logDebug @constructor.name + "[" + @_url + "]: closed"
+            Weinre.logDebug @constructor.name + "[#{@_url}]: closed"
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)
