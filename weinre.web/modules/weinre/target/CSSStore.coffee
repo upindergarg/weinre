@@ -11,14 +11,7 @@ Weinre      = require('../common/Weinre')
 
 Properties = []
 
-if      (Element.prototype.webkitMatchesSelector)
-    _elementMatchesSelector = _webkitMatchesSelector
-
-else if (Element.prototype.mozMatchesSelector)
-    _elementMatchesSelector = _mozMatchesSelector
-
-else
-    _elementMatchesSelector = _fallbackMatchesSelector
+_elementMatchesSelector = null
 
 #-------------------------------------------------------------------------------
 module.exports = class CSSStore
@@ -339,4 +332,15 @@ _fallbackMatchesSelector =  (element, selector) ->
       false
 
 #-------------------------------------------------------------------------------
+if      (Element.prototype.webkitMatchesSelector)
+    _elementMatchesSelector = _webkitMatchesSelector
+
+else if (Element.prototype.mozMatchesSelector)
+    _elementMatchesSelector = _mozMatchesSelector
+
+else
+    _elementMatchesSelector = _fallbackMatchesSelector
+
+#-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)
+

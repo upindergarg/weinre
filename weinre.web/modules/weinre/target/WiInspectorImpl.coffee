@@ -27,12 +27,12 @@ module.exports = class WiInspectorImpl
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
 
-        Weinre.elementHighlighter.on_ node
+        Weinre.elementHighlighter.on node
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
 
     #---------------------------------------------------------------------------
     hideDOMNodeHighlight: (callback) ->
-        Weinre.elementHighlighter.off_()
+        Weinre.elementHighlighter.off()
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
 
     #---------------------------------------------------------------------------
