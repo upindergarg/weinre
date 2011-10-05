@@ -13,7 +13,7 @@ getElementFunction =  (elementName) ->
       ->
           element = document.createElement(elementName)
           args = [].slice.call(arguments)
-          args.forEach (argument) ->
+          for argument in args
               if argument.nodeType
                   addToElement_Node element, argument
               else if typeof argument == "string"

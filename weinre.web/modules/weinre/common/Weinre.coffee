@@ -68,6 +68,15 @@ module.exports = class Weinre
         getLogger().logDebug message
 
 #-------------------------------------------------------------------------------
+class ConsoleLogger
+    logError:   (message) -> console.log "error: #{message}"
+    logWarning: (message) -> console.log "warning: #{message}"
+    logInfo:    (message) -> console.log "info: #{message}"
+    logDebug:   (message) -> console.log "debug: #{message}"
+
+logger = new ConsoleLogger()
+
+#-------------------------------------------------------------------------------
 getLogger =  () ->
       return logger  if logger
       if Weinre.client

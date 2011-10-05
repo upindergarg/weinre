@@ -135,10 +135,10 @@ module.exports = class NodeStore
         ids = []
         i = 0
 
-        while i < node.childNodes.length
-            continue  if @isToBeSkipped(node.childNodes[i])
-            ids.push @getNodeId(node.childNodes[i])
-            i++
+        for childNode in node.childNodes
+            continue if @isToBeSkipped(childNode)
+            ids.push @getNodeId(childNode)
+
         ids
 
     #---------------------------------------------------------------------------

@@ -14,7 +14,6 @@ UsingRemote = false
 RemoteConsole   = null
 OriginalConsole = null
 
-
 MessageSource =
     HTML:  0
     WML:   1
@@ -44,16 +43,8 @@ MessageLevel =
 #-------------------------------------------------------------------------------
 module.exports = class Console
 
-    RemoteConsole   = new Console()
-    OriginalConsole = window.console
-
-    RemoteConsole.__original   = OriginalConsole
-    OriginalConsole.__original = OriginalConsole
-
     #---------------------------------------------------------------------------
-    @this.__defineGetter__("original", ->
-        OriginalConsole
-    )
+    Console::__defineGetter__("original", -> OriginalConsole)
 
     #---------------------------------------------------------------------------
     @useRemote: (value) ->
@@ -159,6 +150,13 @@ module.exports = class Console
     #---------------------------------------------------------------------------
     groupEnd: ->
         Weinre.notImplemented arguments.callee.signature
+
+#-------------------------------------------------------------------------------
+RemoteConsole   = new Console()
+OriginalConsole = window.console
+
+RemoteConsole.__original   = OriginalConsole
+OriginalConsole.__original = OriginalConsole
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

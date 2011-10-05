@@ -34,19 +34,26 @@ module.exports = class SqlStepper
     @example: (db, id) ->
         step1 = ->
             @executeSql "SELECT name FROM sqlite_master WHERE type='table'"
+
         step2 = (resultSet) ->
             rows = resultSet.rows
             result = []
-            i = 0
 
+            i = 0
             while i < rows.length
                 name = rows.item(i).name
-                continue  if name == "__WebKitDatabaseInfoTable__"
+                if name == "__WebKitDatabaseInfoTable__"
+                    i++
+                    continue
+
                 result.push name
                 i++
+
             console.log "[" + @id + "] table names: " + result.join(", ")
+
         errorCb = (sqlError) ->
             console.log "[" + @id + "] sql error:" + sqlError.code + ": " + sqlError.message
+
         stepper = new SqlStepper([ step1, step2 ])
         stepper.id = id
         stepper.run db, errorCb

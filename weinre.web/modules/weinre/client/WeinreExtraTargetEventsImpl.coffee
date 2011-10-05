@@ -21,19 +21,14 @@ module.exports = class WeinreExtraTargetEventsImpl
         return  unless WebInspector.panels.resources._databases
         existingDbs = WebInspector.panels.resources._databases
         existingDbNames = {}
-        i = 0
 
-        while i < existingDbs.length
-            existingDbNames[existingDbs[i].name] = existingDbs[i]
-            i++
-        i = 0
+        for existingDb in existingDbs
+            existingDbNames[existingDb.name] = existingDb
 
-        while i < databaseRecords.length
-            continue  if existingDbNames[databaseRecords[i].name]
-            databaseRecord = databaseRecords[i]
+        for databaseRecord in databaseRecords
+            continue if existingDbNames[databaseRecord.name]
             database = new WebInspector.Database(databaseRecord.id, databaseRecord.domain, databaseRecord.name, databaseRecord.version)
             WebInspector.panels.resources.addDatabase database
-            i++
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

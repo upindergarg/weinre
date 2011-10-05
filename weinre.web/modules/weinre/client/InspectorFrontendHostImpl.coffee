@@ -72,7 +72,7 @@ module.exports = class InspectorFrontendHostImpl
         if splits.length > 1
             properties = splits[1]
             properties = properties.split("&")
-            properties.forEach (property) ->
+            for property in properties
                 pieces = property.split("=")
                 if pieces.length > 1
                     key = pieces[0]

@@ -20,8 +20,8 @@ module.exports = class IDLTools
 
     #---------------------------------------------------------------------------
     @addIDLs: (idls) ->
-        idls.forEach (idl) ->
-            idl.interfaces.forEach (intf) ->
+        for idl in idls
+            for intf in idl.interfaces
                 IDLs[intf.name] = intf
                 intf.module = idl.name
 
@@ -43,16 +43,16 @@ module.exports = class IDLTools
         messagePrefix = "IDL validation for " + interfaceName + ": "
         throw new Ex(arguments, messagePrefix + "idl not found: '" + interfaceName + "'")  if null == intf
         errors = []
-        intf.methods.forEach (intfMethod) ->
+        for intfMethod in intf.methods
             classMethod = klass::[intfMethod.name]
             printName = klass.name + "::" + intfMethod.name
             if null == classMethod
                 errors.push messagePrefix + "method not implemented: '" + printName + "'"
-                return
+                continue
             unless classMethod.length == intfMethod.parameters.length
                 unless classMethod.length == intfMethod.parameters.length + 1
                     errors.push messagePrefix + "wrong number of parameters: '" + printName + "'"
-                    return
+                    continue
 
         for propertyName of klass::
             continue  if klass::hasOwnProperty(propertyName)
@@ -62,7 +62,7 @@ module.exports = class IDLTools
                 errors.push messagePrefix + "method should not be implemented: '" + printName + "'"
                 continue
         return  unless errors.length
-        errors.forEach (error) ->
+        for error in errors
             require("./Weinre").logError error
 
     #---------------------------------------------------------------------------
@@ -70,7 +70,7 @@ module.exports = class IDLTools
         intf = IDLTools.getIDL(interfaceName)
         messagePrefix = "building proxy for IDL " + interfaceName + ": "
         throw new Ex(arguments, messagePrefix + "idl not found: '" + interfaceName + "'")  if null == intf
-        intf.methods.forEach (intfMethod) ->
+        for intfMethod in intf.methods
             proxyObject[intfMethod.name] = getProxyMethod(intf, intfMethod)
 
 #-------------------------------------------------------------------------------

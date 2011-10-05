@@ -60,13 +60,17 @@ getTableNames_step_1 =  () ->
 getTableNames_step_2 =  (resultSet) ->
       rows = resultSet.rows
       result = []
-      i = 0
 
+      i = 0
       while i < rows.length
           name = rows.item(i).name
-          continue  if name == "__WebKitDatabaseInfoTable__"
+          if name == "__WebKitDatabaseInfoTable__"
+            i++
+            continue
+
           result.push name
           i++
+
       Weinre.WeinreTargetCommands.sendClientCallback @callback, [ result ]
 
 #-------------------------------------------------------------------------------

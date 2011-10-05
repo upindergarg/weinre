@@ -107,9 +107,9 @@ module.exports = class RemotePanel extends WebInspector.Panel
 
     #---------------------------------------------------------------------------
     cb_getTargets: (targets) ->
-        targets.forEach ((target) ->
+        for target in targets
             @addTarget target
-        ), this
+
         return  unless Weinre.client.autoConnect()
         newestTargetChannel = @getNewestTargetChannel()
         return  unless newestTargetChannel
@@ -118,9 +118,8 @@ module.exports = class RemotePanel extends WebInspector.Panel
 
     #---------------------------------------------------------------------------
     cb_getClients: (clients) ->
-        clients.forEach ((client) ->
+        for client in clients
             @addClient client
-        ), this
 
     #---------------------------------------------------------------------------
     show: ->
@@ -137,13 +136,13 @@ module.exports = class RemotePanel extends WebInspector.Panel
         for key of properties
             keys.push key
         keys = keys.sort()
-        keys.forEach (key) ->
+        for key in keys
             val = properties[key]
             if typeof val == "string"
                 val = val.escapeHTML()
             else
                 finalVal = ""
-                val.forEach (aVal) ->
+                for aVal in val
                     finalVal += "<li>" + aVal.escapeHTML()
 
                 val = "<ul>" + finalVal + "</ul>"

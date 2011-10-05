@@ -108,6 +108,7 @@ module.exports = class Target
             setTimeout (->
                 self.onLoaded()
             ), 20
+#        MessageDispatcher.verbose(true)
         messageDispatcher = new MessageDispatcher(window.WeinreServerURL + "ws/target", window.WeinreServerId)
         Weinre.messageDispatcher = messageDispatcher
         Weinre.wi = {}

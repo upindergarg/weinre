@@ -18,10 +18,13 @@ module.exports = class IDGenerator
     #---------------------------------------------------------------------------
     @getId: (object, map) ->
         id = IDGenerator.checkId(object)
+
         unless id
             id = nextId()
             object[idName] = id
-        map[id] = object  unless map[id] == object  if map
+
+        map[id] = object if map
+
         id
 
     #---------------------------------------------------------------------------

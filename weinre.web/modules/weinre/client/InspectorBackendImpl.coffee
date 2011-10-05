@@ -21,13 +21,13 @@ module.exports = class InspectorBackendImpl
     #---------------------------------------------------------------------------
     @setupProxies: ->
         intfNames = [ "ApplicationCache", "BrowserDebugger", "CSS", "Console", "DOM", "DOMStorage", "Database", "Debugger", "InjectedScript", "Inspector", "Network", "Profiler", "Runtime" ]
-        intfNames.forEach (intfName) ->
+        for intfName in intfNames
             proxy = Weinre.messageDispatcher.createProxy(intfName)
             throw new Ex(arguments, "backend interface '" + intfName + "' already created")  if window[intfName]
             intf = IDLTools.getIDL(intfName)
             throw new Ex(arguments, "interface not registered: '" + intfName + "'")  unless intf
             window[intfName] = {}
-            intf.methods.forEach (method) ->
+            for method in intf.methods
                 proxyMethod = InspectorBackendImpl.getProxyMethod(proxy, method)
                 InspectorBackendImpl::[method.name] = proxyMethod
                 window[intfName][method.name] = proxyMethod

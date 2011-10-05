@@ -21,7 +21,7 @@ module.exports = class StackTrace
     #---------------------------------------------------------------------------
     dump: ->
         console.log "StackTrace:"
-        @trace.forEach (frame) ->
+        for frame in @trace
             console.log "    " + frame
 
 #-------------------------------------------------------------------------------

@@ -66,9 +66,9 @@ module.exports = class Client
         WebInspector.panelOrder.unshift WebInspector.panelOrder.pop()
         WebInspector.currentPanel = panel
         toolButtonsToHide = [ "scripts" ]
-        toolButtonsToHide.forEach (toolButtonToHide) ->
-            return  unless WebInspector.panels[toolButtonToHide]
-            return  unless WebInspector.panels[toolButtonToHide].toolbarItem
+        for toolButtonToHide in toolButtonsToHide
+            continue unless WebInspector.panels[toolButtonToHide]
+            continue unless WebInspector.panels[toolButtonToHide].toolbarItem
             WebInspector.panels[toolButtonToHide].toolbarItem.style.display = "none"
 
         button = document.getElementById("dock-status-bar-item")

@@ -34,15 +34,16 @@ module.exports = class EventListeners
     fire: (event) ->
         listeners = @listeners.slice()
         for listener in listeners
+            listener = listener[0]
 
             if typeof listener is "function"
                 try
                     listener.call null, event
                 catch e
                     Weinre.logError "#{arguments.callee.name} invocation exception: #{e}"
-                return
+                continue
 
-            if typeof listener?.handleEvent is not "function"
+            if typeof listener?.handleEvent isnt "function"
                 throw new Ex(arguments, "listener does not implement the handleEvent() method")
 
             try

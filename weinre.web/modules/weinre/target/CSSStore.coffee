@@ -54,23 +54,18 @@ module.exports = class CSSStore
     #---------------------------------------------------------------------------
     getMatchedCSSRules: (node) ->
         result = []
-        i = 0
 
-        while i < document.styleSheets.length
-            styleSheet = document.styleSheets[i]
+        for styleSheet in document.styleSheets
             continue  unless styleSheet.cssRules
-            j = 0
 
-            while j < styleSheet.cssRules.length
-                cssRule = styleSheet.cssRules[j]
+            for cssRule in styleSheet.cssRules
                 continue  unless _elementMatchesSelector(node, cssRule.selectorText)
                 object = {}
                 object.ruleId = @_getStyleRuleId(cssRule)
                 object.selectorText = cssRule.selectorText
                 object.style = @_buildMirrorForStyle(cssRule.style, true)
                 result.push object
-                j++
-            i++
+
         result
 
     #---------------------------------------------------------------------------
@@ -180,10 +175,8 @@ module.exports = class CSSStore
         cssText = []
         cssProperties = styleDecl.__weinre__mirror.cssProperties
         cssText = ""
-        i = 0
 
-        while i < cssProperties.length
-            property = cssProperties[i]
+        for property in cssProperties
             continue  unless property.parsedOk
             continue  if property.status == "disabled"
             continue  if property.shorthandName
@@ -192,7 +185,7 @@ module.exports = class CSSStore
                 cssText += " !important; "
             else
                 cssText += "; "
-            i++
+
         styleDecl.cssText = cssText
 
     #---------------------------------------------------------------------------

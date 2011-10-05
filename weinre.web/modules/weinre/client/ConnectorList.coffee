@@ -52,11 +52,10 @@ module.exports = class ConnectorList
     getConnectorInsertionPoint: (connector) ->
         i = 0
 
-        while i < @ulConnectors.childNodes.length
-            childNode = @ulConnectors.childNodes[i]
+        for childNode in @ulConnectors.childNodes
             continue  if null == childNode.connectorChannel
             return childNode  if childNode.connectorChannel < connector.channel
-            i++
+
         null
 
     #---------------------------------------------------------------------------
@@ -84,9 +83,8 @@ module.exports = class ConnectorList
 
     #---------------------------------------------------------------------------
     removeAll: () ->
-        @getConnectors().forEach ((connector) ->
+        for connector in @getConnectors()
             @remove connector.channel, true
-        ), this
 
     #---------------------------------------------------------------------------
     getConnectors: () ->
@@ -104,7 +102,7 @@ module.exports = class ConnectorList
 
     #---------------------------------------------------------------------------
     setCurrent: (channel) ->
-        @getConnectors().forEach (connector) ->
+        for connector in @getConnectors()
             connector.element.removeStyleClass "current"
 
         element = @getConnectorElement(channel)

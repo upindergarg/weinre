@@ -90,7 +90,7 @@ module.exports = class WebSocketXhr
         Native.setTimeout (->
             self._readLoop()
         ), 0
-        datum.forEach (data) ->
+        for data in datum
             self._fireEventListeners "message", data: data
 
     #---------------------------------------------------------------------------
