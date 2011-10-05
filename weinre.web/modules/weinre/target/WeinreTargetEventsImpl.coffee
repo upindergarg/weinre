@@ -6,10 +6,9 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Weinre = require('../common/Weinre')
+Weinre   = require('../common/Weinre')
 Callback = require('../common/Callback')
-
-Console = require('./Console')
+Console  = require('./Console')
 
 #-------------------------------------------------------------------------------
 module.exports = class WeinreTargetEventsImpl
@@ -20,6 +19,7 @@ module.exports = class WeinreTargetEventsImpl
     connectionCreated: ( clientChannel,  targetChannel) ->
         message = "weinre: target " + targetChannel + " connected to client " + clientChannel
         Weinre.logInfo message
+
         oldValue = Console.useRemote(true)
         Weinre.target.setDocument()
         Weinre.wi.TimelineNotify.timelineProfilerWasStopped()
@@ -29,6 +29,7 @@ module.exports = class WeinreTargetEventsImpl
     connectionDestroyed: ( clientChannel,  targetChannel) ->
         message = "weinre: target " + targetChannel + " disconnected from client " + clientChannel
         Weinre.logInfo message
+
         oldValue = Console.useRemote(false)
 
     #---------------------------------------------------------------------------

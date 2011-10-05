@@ -6,10 +6,10 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Ex = require('./Ex')
-Weinre = require('./Weinre')
+Ex             = require('./Ex')
+Weinre         = require('./Weinre')
 EventListeners = require('./EventListeners')
-Native = require('./Native')
+Native         = require('./Native')
 
 XMLHttpRequest = Native.XMLHttpRequest
 
@@ -35,11 +35,12 @@ module.exports = class WebSocketXhr
         @_urlChannel = null
         @_queuedSends = []
         @_sendInProgress = true
+
         @_listeners =
-            open: new EventListeners()
+            open:    new EventListeners()
             message: new EventListeners()
-            error: new EventListeners()
-            close: new EventListeners()
+            error:   new EventListeners()
+            close:   new EventListeners()
 
         @_getChannel()
 
@@ -51,18 +52,22 @@ module.exports = class WebSocketXhr
     #---------------------------------------------------------------------------
     _handleXhrResponseGetChannel: (xhr) ->
         return @_handleXhrResponseError(xhr)  unless xhr.status == 200
+
         try
             object = JSON.parse(xhr.responseText)
         catch e
             @_fireEventListeners "error", message: "non-JSON response from channel open request"
             @close()
             return
+
         unless object.channel
             @_fireEventListeners "error", message: "channel open request did not include a channel"
             @close()
             return
+
         @_urlChannel = @_url + "/" + object.channel
         @readyState = WebSocketXhr.OPEN
+
         @_fireEventListeners "open",
             message: "open"
             channel: object.channel
@@ -75,27 +80,33 @@ module.exports = class WebSocketXhr
     _readLoop: ->
         return  if @readyState == WebSocketXhr.CLOSED
         return  if @readyState == WebSocketXhr.CLOSING
+
         @_xhr @_urlChannel, "GET", "", @_handleXhrResponseGet
 
     #---------------------------------------------------------------------------
     _handleXhrResponseGet: (xhr) ->
         self = this
         return @_handleXhrResponseError(xhr)  unless xhr.status == 200
+
         try
             datum = JSON.parse(xhr.responseText)
         catch e
             @readyState = WebSocketXhr.CLOSED
             @_fireEventListeners "error", message: "non-JSON response from read request"
             return
+
         Native.setTimeout (->
             self._readLoop()
         ), 0
+
         for data in datum
             self._fireEventListeners "message", data: data
 
     #---------------------------------------------------------------------------
     send: (data) ->
-        throw new Ex(arguments, @constructor.name + "." + @caller)  unless typeof data == "string"
+        unless typeof data == "string"
+            throw new Ex(arguments, @constructor.name + "." + @caller)
+
         @_queuedSends.push data
         return  if @_sendInProgress
         @_sendQueued()
@@ -105,6 +116,7 @@ module.exports = class WebSocketXhr
         return  if @_queuedSends.length == 0
         return  if @readyState == WebSocketXhr.CLOSED
         return  if @readyState == WebSocketXhr.CLOSING
+
         datum = JSON.stringify(@_queuedSends)
         @_queuedSends = []
         @_sendInProgress = true
@@ -114,7 +126,9 @@ module.exports = class WebSocketXhr
     _handleXhrResponseSend: (xhr) ->
         httpSocket = this
         return @_handleXhrResponseError(xhr)  unless xhr.status == 200
+
         @_sendInProgress = false
+
         Native.setTimeout (->
             httpSocket._sendQueued()
         ), 0
@@ -123,6 +137,7 @@ module.exports = class WebSocketXhr
     close: ->
         @_sendInProgress = true
         @readyState = WebSocketXhr.CLOSING
+
         @_fireEventListeners "close",
             message: "closing"
             wasClean: true
@@ -140,13 +155,15 @@ module.exports = class WebSocketXhr
     #---------------------------------------------------------------------------
     _fireEventListeners: (type, event) ->
         return  if @readyState == WebSocketXhr.CLOSED
+
         event.target = this
         @_getListeners(type).fire event
 
     #---------------------------------------------------------------------------
     _getListeners: (type) ->
         listeners = @_listeners[type]
-        throw new Ex(arguments, "invalid event listener type: '" + type + "'")  if null == listeners
+        if null == listeners
+            throw new Ex(arguments, "invalid event listener type: '" + type + "'")
         listeners
 
     #---------------------------------------------------------------------------
@@ -154,6 +171,7 @@ module.exports = class WebSocketXhr
         if xhr.status == 404
             @close()
             return
+
         @_fireEventListeners "error",
             target: this
             status: xhr.status
@@ -163,7 +181,9 @@ module.exports = class WebSocketXhr
 
     #---------------------------------------------------------------------------
     _xhr: (url, method, data, handler) ->
-        throw new Ex(arguments, "handler must not be null")  if null == handler
+        if null == handler
+            throw new Ex(arguments, "handler must not be null")
+
         xhr = new XMLHttpRequest()
         xhr.httpSocket = this
         xhr.httpSocketHandler = handler
@@ -176,6 +196,7 @@ module.exports = class WebSocketXhr
 _xhrEventHandler =  (event) ->
       xhr = event.target
       return  unless xhr.readyState == 4
+
       xhr.httpSocketHandler.call xhr.httpSocket, xhr
 
 #-------------------------------------------------------------------------------

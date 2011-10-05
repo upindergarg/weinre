@@ -6,7 +6,7 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Weinre = require('../common/Weinre')
+Weinre   = require('../common/Weinre')
 Timeline = require('../target/Timeline')
 
 #-------------------------------------------------------------------------------
@@ -22,9 +22,11 @@ module.exports = class WiInspectorImpl
     #---------------------------------------------------------------------------
     highlightDOMNode: ( nodeId, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
+
         unless node
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
+
         Weinre.elementHighlighter.on_ node
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
 

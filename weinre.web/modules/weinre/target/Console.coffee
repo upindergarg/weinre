@@ -6,7 +6,7 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Weinre = require('../common/Weinre')
+Weinre   = require('../common/Weinre')
 Timeline = require('../target/Timeline')
 
 UsingRemote = false
@@ -49,23 +49,25 @@ module.exports = class Console
     #---------------------------------------------------------------------------
     @useRemote: (value) ->
         return UsingRemote  if arguments.length == 0
+
         oldValue = UsingRemote
         UsingRemote = not not value
+
         if UsingRemote
             window.console = RemoteConsole
         else
             window.console = OriginalConsole
+
         oldValue
 
     #---------------------------------------------------------------------------
     _generic: (level, messageParts) ->
         message = messageParts[0].toString()
         parameters = []
-        i = 0
 
-        while i < messageParts.length
-            parameters.push Weinre.injectedScript.wrapObjectForConsole(messageParts[i], true)
-            i++
+        for messagePart in messageParts
+            parameters.push Weinre.injectedScript.wrapObjectForConsole(messagePart, true)
+
         payload =
             source: MessageSource.JS
             type: MessageType.Log

@@ -6,10 +6,10 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Ex = require('../common/Ex')
-IDLTools = require('../common/IDLTools')
+Ex                = require('../common/Ex')
+IDLTools          = require('../common/IDLTools')
 MessageDispatcher = require('../common/MessageDispatcher')
-Weinre = require('../common/Weinre')
+Weinre            = require('../common/Weinre')
 
 #-------------------------------------------------------------------------------
 module.exports = class InspectorBackendImpl
@@ -20,12 +20,32 @@ module.exports = class InspectorBackendImpl
 
     #---------------------------------------------------------------------------
     @setupProxies: ->
-        intfNames = [ "ApplicationCache", "BrowserDebugger", "CSS", "Console", "DOM", "DOMStorage", "Database", "Debugger", "InjectedScript", "Inspector", "Network", "Profiler", "Runtime" ]
+        intfNames = [
+            "ApplicationCache"
+            "BrowserDebugger"
+            "CSS"
+            "Console"
+            "DOM"
+            "DOMStorage"
+            "Database"
+            "Debugger"
+            "InjectedScript"
+            "Inspector"
+            "Network"
+            "Profiler"
+            "Runtime"
+        ]
+
         for intfName in intfNames
             proxy = Weinre.messageDispatcher.createProxy(intfName)
-            throw new Ex(arguments, "backend interface '" + intfName + "' already created")  if window[intfName]
+
+            if window[intfName]
+                throw new Ex(arguments, "backend interface '" + intfName + "' already created")
+
             intf = IDLTools.getIDL(intfName)
-            throw new Ex(arguments, "interface not registered: '" + intfName + "'")  unless intf
+            unless intf
+                throw new Ex(arguments, "interface not registered: '" + intfName + "'")
+
             window[intfName] = {}
             for method in intf.methods
                 proxyMethod = InspectorBackendImpl.getProxyMethod(proxy, method)

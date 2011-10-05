@@ -16,9 +16,11 @@ module.exports = class WiDOMImpl
     #---------------------------------------------------------------------------
     getChildNodes: ( nodeId, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
+
         unless node
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
+
         children = Weinre.nodeStore.serializeNodeChildren(node, 1)
         Weinre.wi.DOMNotify.setChildNodes nodeId, children
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
@@ -26,27 +28,33 @@ module.exports = class WiDOMImpl
     #---------------------------------------------------------------------------
     setAttribute: ( elementId,  name,  value, callback) ->
         element = Weinre.nodeStore.getNode(elementId)
+
         unless element
             Weinre.logWarning arguments.callee.signature + " passed an invalid elementId: " + elementId
             return
+
         element.setAttribute name, value
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
 
     #---------------------------------------------------------------------------
     removeAttribute: ( elementId,  name, callback) ->
         element = Weinre.nodeStore.getNode(elementId)
+
         unless element
             Weinre.logWarning arguments.callee.signature + " passed an invalid elementId: " + elementId
             return
+
         element.removeAttribute name
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
 
     #---------------------------------------------------------------------------
     setTextNodeValue: ( nodeId,  value, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
+
         unless node
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
+
         node.nodeValue = value
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
 
@@ -61,12 +69,15 @@ module.exports = class WiDOMImpl
     #---------------------------------------------------------------------------
     removeNode: ( nodeId, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
+
         unless node
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
+
         unless node.parentNode
             Weinre.logWarning arguments.callee.signature + " passed a parentless node: " + node
             return
+
         node.parentNode.removeChild node
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
 
@@ -77,18 +88,23 @@ module.exports = class WiDOMImpl
     #---------------------------------------------------------------------------
     getOuterHTML: ( nodeId, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
+
         unless node
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
+
         value = node.outerHTML
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ value ]  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ value ]
 
     #---------------------------------------------------------------------------
     setOuterHTML: ( nodeId,  outerHTML, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
+
         unless node
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
+
         node.outerHTML = outerHTML
         Weinre.WeinreTargetCommands.sendClientCallback callback  if callback
 
@@ -112,24 +128,28 @@ module.exports = class WiDOMImpl
     #---------------------------------------------------------------------------
     resolveNode: ( nodeId, callback) ->
         result = Weinre.injectedScript.resolveNode(nodeId)
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
     getNodeProperties: ( nodeId,  propertiesArray, callback) ->
         propertiesArray = JSON.stringify(propertiesArray)
         result = Weinre.injectedScript.getNodeProperties(nodeId, propertiesArray)
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
     getNodePrototypes: ( nodeId, callback) ->
         result = Weinre.injectedScript.getNodePrototypes(nodeId)
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
     pushNodeToFrontend: ( objectId, callback) ->
         objectId = JSON.stringify(objectId)
         result = Weinre.injectedScript.pushNodeToFrontend(objectId)
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

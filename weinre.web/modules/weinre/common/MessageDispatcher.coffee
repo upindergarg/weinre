@@ -6,12 +6,12 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Weinre = require('./Weinre')
+Weinre       = require('./Weinre')
 WebSocketXhr = require('./WebSocketXhr')
-IDLTools = require('./IDLTools')
-Binding = require('./Binding')
-Ex = require('./Ex')
-Callback = require('./Callback')
+IDLTools     = require('./IDLTools')
+Binding      = require('./Binding')
+Ex           = require('./Ex')
+Callback     = require('./Callback')
 
 Verbose = false
 InspectorBackend = null
@@ -68,8 +68,12 @@ module.exports = class MessageDispatcher
 
     #---------------------------------------------------------------------------
     registerInterface: (intfName, intf, validate) ->
-        IDLTools.validateAgainstIDL intf.constructor, intfName  if validate
-        throw new Ex(arguments, "interface " + intfName + " has already been registered")  if @_interfaces[intfName]
+        if validate
+            IDLTools.validateAgainstIDL intf.constructor, intfName
+
+        if @_interfaces[intfName]
+            throw new Ex(arguments, "interface " + intfName + " has already been registered")
+
         @_interfaces[intfName] = intf
 
     #---------------------------------------------------------------------------
@@ -77,6 +81,7 @@ module.exports = class MessageDispatcher
         proxy = {}
         IDLTools.buildProxyForIDL proxy, intfName
         self = this
+
         proxy.__invoke = __invoke = (intfName, methodName, args) ->
             self._sendMethodInvocation intfName, methodName, args
 
@@ -84,12 +89,16 @@ module.exports = class MessageDispatcher
 
     #---------------------------------------------------------------------------
     _sendMethodInvocation: (intfName, methodName, args) ->
-        throw new Ex(arguments, "expecting intf parameter to be a string")  unless typeof intfName == "string"
-        throw new Ex(arguments, "expecting method parameter to be a string")  unless typeof methodName == "string"
+        unless typeof intfName == "string"
+            throw new Ex(arguments, "expecting intf parameter to be a string")
+
+        unless typeof methodName == "string"
+            throw new Ex(arguments, "expecting method parameter to be a string")
+
         data =
             interface: intfName
-            method: methodName
-            args: args
+            method:    methodName
+            args:      args
 
         data = JSON.stringify(data)
         @_socket.send data
@@ -112,13 +121,17 @@ module.exports = class MessageDispatcher
         @_opened = true
         @channel = event.channel
         Callback.setConnectorChannel @channel
-        Weinre.logDebug @constructor.name + "[" + @_url + "]: opened"  if Verbose
+
+        if Verbose
+            Weinre.logDebug @constructor.name + "[" + @_url + "]: opened"
 
     #---------------------------------------------------------------------------
     _handleError: (message) ->
         @error = message
         @close()
-        Weinre.logDebug @constructor.name + "[" + @_url + "]: error: " + message  if Verbose
+
+        if Verbose
+            Weinre.logDebug @constructor.name + "[" + @_url + "]: error: " + message
 
     #---------------------------------------------------------------------------
     _handleMessage: (message) ->
@@ -126,17 +139,21 @@ module.exports = class MessageDispatcher
             data = JSON.parse(message.data)
         catch e
             throw new Ex(arguments, "invalid JSON data received: " + e + ": '" + message.data + "'")
+
         intfName = data["interface"]
         methodName = data.method
         args = data.args
         methodSignature = intfName + "." + methodName + "()"
         intf = @_interfaces.hasOwnProperty(intfName) and @_interfaces[intfName]
         intf = InspectorBackend.getRegisteredDomainDispatcher(intfName.substr(0, intfName.length - 6))  if not intf and InspectorBackend and intfName.match(/.*Notify/)
+
         unless intf
             Weinre.logWarning "weinre: request for non-registered interface:" + methodSignature
             return
+
         methodSignature = intf.constructor.name + "." + methodName + "()"
         method = intf[methodName]
+
         unless typeof method == "function"
             Weinre.notImplemented methodSignature
             return
@@ -144,12 +161,15 @@ module.exports = class MessageDispatcher
             method.apply intf, args
         catch e
             Weinre.logError "weinre: invocation exception on " + methodSignature + ": " + e
-        Weinre.logDebug @constructor.name + "[" + @_url + "]: recv " + intfName + "." + methodName + "(" + JSON.stringify(args) + ")"  if Verbose
+
+        if Verbose
+            Weinre.logDebug @constructor.name + "[" + @_url + "]: recv " + intfName + "." + methodName + "(" + JSON.stringify(args) + ")"
 
     #---------------------------------------------------------------------------
     _handleClose: ->
         @_reallyClosed = true
-        Weinre.logDebug @constructor.name + "[" + @_url + "]: closed"  if Verbose
+        if Verbose
+            Weinre.logDebug @constructor.name + "[" + @_url + "]: closed"
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

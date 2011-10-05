@@ -19,6 +19,7 @@ module.exports = class WeinreExtraTargetEventsImpl
         return  unless WebInspector.panels
         return  unless WebInspector.panels.resources
         return  unless WebInspector.panels.resources._databases
+
         existingDbs = WebInspector.panels.resources._databases
         existingDbNames = {}
 

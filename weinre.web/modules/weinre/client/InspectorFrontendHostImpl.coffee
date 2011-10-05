@@ -6,7 +6,7 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Weinre = require('../common/Weinre')
+Weinre   = require('../common/Weinre')
 IDLTools = require('../common/IDLTools')
 
 _extensionAPI = null

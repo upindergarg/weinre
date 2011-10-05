@@ -6,12 +6,11 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Ex = require('../common/Ex')
-Weinre = require('../common/Weinre')
+Ex          = require('../common/Ex')
+Weinre      = require('../common/Weinre')
 IDGenerator = require('../common/IDGenerator')
-StackTrace = require('../common/StackTrace')
-
-Native = require('../common/Native')
+StackTrace  = require('../common/StackTrace')
+Native      = require('../common/Native')
 
 Running = false
 
@@ -62,50 +61,58 @@ module.exports = class Timeline
     #---------------------------------------------------------------------------
     @addRecord_Mark: (message) ->
         return  unless Timeline.isRunning()
+
         record = {}
-        record.type = TimelineRecordType.Mark
-        record.category = name: "scripting"
+        record.type      = TimelineRecordType.Mark
+        record.category  = name: "scripting"
         record.startTime = Date.now()
-        record.data = message: message
+        record.data      = message: message
+
         addStackTrace record, 3
+
         Weinre.wi.TimelineNotify.addRecordToTimeline record
 
     #---------------------------------------------------------------------------
     @addRecord_EventDispatch: (event, name, category) ->
         return  unless Timeline.isRunning()
+
         category = "scripting"  unless category
         record = {}
-        record.type = TimelineRecordType.EventDispatch
-        record.category = name: category
+        record.type      = TimelineRecordType.EventDispatch
+        record.category  = name: category
         record.startTime = Date.now()
-        record.data = type: event.type
+        record.data      = type: event.type
+
         Weinre.wi.TimelineNotify.addRecordToTimeline record
 
     #---------------------------------------------------------------------------
     @addRecord_TimerInstall: (id, timeout, singleShot) ->
         return  unless Timeline.isRunning()
+
         record = {}
-        record.type = TimelineRecordType.TimerInstall
-        record.category = name: "scripting"
+        record.type      = TimelineRecordType.TimerInstall
+        record.category  = name: "scripting"
         record.startTime = Date.now()
         record.data =
-            timerId: id
-            timeout: timeout
+            timerId:    id
+            timeout:    timeout
             singleShot: singleShot
 
         addStackTrace record, 4
+
         Weinre.wi.TimelineNotify.addRecordToTimeline record
 
     #---------------------------------------------------------------------------
     @addRecord_TimerRemove: (id, timeout, singleShot) ->
         return  unless Timeline.isRunning()
+
         record = {}
-        record.type = TimelineRecordType.TimerRemove
-        record.category = name: "scripting"
+        record.type      = TimelineRecordType.TimerRemove
+        record.category  = name: "scripting"
         record.startTime = Date.now()
         record.data =
-            timerId: id
-            timeout: timeout
+            timerId:    id
+            timeout:    timeout
             singleShot: singleShot
 
         addStackTrace record, 4
@@ -114,13 +121,14 @@ module.exports = class Timeline
     #---------------------------------------------------------------------------
     @addRecord_TimerFire: (id, timeout, singleShot) ->
         return  unless Timeline.isRunning()
+
         record = {}
-        record.type = TimelineRecordType.TimerFire
-        record.category = name: "scripting"
+        record.type      = TimelineRecordType.TimerFire
+        record.category  = name: "scripting"
         record.startTime = Date.now()
         record.data =
-            timerId: id
-            timeout: timeout
+            timerId:    id
+            timeout:    timeout
             singleShot: singleShot
 
         Weinre.wi.TimelineNotify.addRecordToTimeline record
@@ -131,26 +139,28 @@ module.exports = class Timeline
 
         if xhr.readyState == XMLHttpRequest.OPENED
             record =
-                type: TimelineRecordType.ResourceSendRequest
-                category: name: "loading"
+                type:      TimelineRecordType.ResourceSendRequest
+                category:  name: "loading"
                 startTime: Date.now()
                 data:
-                    identifier: id
-                    url: url
+                    identifier:    id
+                    url:           url
                     requestMethod: method
+
         else if xhr.readyState == XMLHttpRequest.DONE
             record =
                 type: TimelineRecordType.ResourceReceiveResponse
                 category: name: "loading"
                 startTime: Date.now()
                 data:
-                    identifier: id
-                    statusCode: xhr.status
-                    mimeType: xhr.getResponseHeader("Content-Type")
+                    identifier:            id
+                    statusCode:            xhr.status
+                    mimeType:              xhr.getResponseHeader("Content-Type")
                     expectedContentLength: xhr.getResponseHeader("Content-Length")
-                    url: url
+                    url:                   url
         else
             return
+
         Weinre.wi.TimelineNotify.addRecordToTimeline record
 
     #---------------------------------------------------------------------------
@@ -159,54 +169,67 @@ module.exports = class Timeline
             applicationCache.addEventListener "checking", ((e) ->
                 Timeline.addRecord_EventDispatch e, "applicationCache.checking", "loading"
             ), false
+
             applicationCache.addEventListener "error", ((e) ->
                 Timeline.addRecord_EventDispatch e, "applicationCache.error", "loading"
             ), false
+
             applicationCache.addEventListener "noupdate", ((e) ->
                 Timeline.addRecord_EventDispatch e, "applicationCache.noupdate", "loading"
             ), false
+
             applicationCache.addEventListener "downloading", ((e) ->
                 Timeline.addRecord_EventDispatch e, "applicationCache.downloading", "loading"
             ), false
+
             applicationCache.addEventListener "progress", ((e) ->
                 Timeline.addRecord_EventDispatch e, "applicationCache.progress", "loading"
             ), false
+
             applicationCache.addEventListener "updateready", ((e) ->
                 Timeline.addRecord_EventDispatch e, "applicationCache.updateready", "loading"
             ), false
+
             applicationCache.addEventListener "cached", ((e) ->
                 Timeline.addRecord_EventDispatch e, "applicationCache.cached", "loading"
             ), false
+
             applicationCache.addEventListener "obsolete", ((e) ->
                 Timeline.addRecord_EventDispatch e, "applicationCache.obsolete", "loading"
             ), false
+
         window.addEventListener "error", ((e) ->
             Timeline.addRecord_EventDispatch e, "window.error"
         ), false
+
         window.addEventListener "hashchange", ((e) ->
             Timeline.addRecord_EventDispatch e, "window.hashchange"
         ), false
+
         window.addEventListener "message", ((e) ->
             Timeline.addRecord_EventDispatch e, "window.message"
         ), false
+
         window.addEventListener "offline", ((e) ->
             Timeline.addRecord_EventDispatch e, "window.offline"
         ), false
+
         window.addEventListener "online", ((e) ->
             Timeline.addRecord_EventDispatch e, "window.online"
         ), false
+
         window.addEventListener "scroll", ((e) ->
             Timeline.addRecord_EventDispatch e, "window.scroll"
         ), false
 
     #---------------------------------------------------------------------------
     @installFunctionWrappers: ->
-        window.clearInterval = wrapped_clearInterval
-        window.clearTimeout = wrapped_clearTimeout
-        window.setTimeout = wrapped_setTimeout
-        window.setInterval = wrapped_setInterval
+        window.clearInterval        = wrapped_clearInterval
+        window.clearTimeout         = wrapped_clearTimeout
+        window.setTimeout           = wrapped_setTimeout
+        window.setInterval          = wrapped_setInterval
         window.XMLHttpRequest::open = wrapped_XMLHttpRequest_open
-        window.XMLHttpRequest = wrapped_XMLHttpRequest
+        window.XMLHttpRequest       = wrapped_XMLHttpRequest
 
 
 #-------------------------------------------------------------------------------
@@ -219,41 +242,48 @@ addStackTrace =  (record, skip) ->
       while i < trace.length
           record.stackTrace.push
               functionName: trace[i]
-              scriptName: ""
-              lineNumber: ""
+              scriptName:   ""
+              lineNumber:   ""
           i++
 
 #-------------------------------------------------------------------------------
 wrapped_setInterval =  (code, interval) ->
       code = instrumentedTimerCode(code, interval, false)
+
       id = Native.setInterval(code, interval)
       code.__timerId = id
       addTimer id, interval, false
+
       id
 
 #-------------------------------------------------------------------------------
 wrapped_setTimeout =  (code, delay) ->
       code = instrumentedTimerCode(code, delay, true)
+
       id = Native.setTimeout(code, delay)
       code.__timerId = id
       addTimer id, delay, true
+
       id
 
 #-------------------------------------------------------------------------------
 wrapped_clearInterval =  (id) ->
       result = Native.clearInterval(id)
       removeTimer id, false
+
       result
 
 #-------------------------------------------------------------------------------
 wrapped_clearTimeout =  (id) ->
       result = Native.clearTimeout(id)
       removeTimer id, true
+
       result
 
 #-------------------------------------------------------------------------------
 addTimer =  (id, timeout, singleShot) ->
       timerSet = (if singleShot then TimerTimeouts else TimerIntervals)
+
       timerSet[id] =
           id: id
           timeout: timeout
@@ -266,12 +296,14 @@ removeTimer =  (id, singleShot) ->
       timerSet = (if singleShot then TimerTimeouts else TimerIntervals)
       timer = timerSet[id]
       return  unless timer
+
       Timeline.addRecord_TimerRemove id, timer.timeout, singleShot
       delete timerSet[id]
 
 #-------------------------------------------------------------------------------
 instrumentedTimerCode =  (code, timeout, singleShot) ->
       return code  unless typeof (code) == "function"
+
       instrumentedCode = ->
           result = code()
           id = arguments.callee.__timerId
@@ -296,9 +328,11 @@ wrapped_XMLHttpRequest.DONE             = 4
 #-------------------------------------------------------------------------------
 wrapped_XMLHttpRequest_open =  () ->
       xhr = this
+
       xhr.__weinre_method = arguments[0]
       xhr.__weinre_url = arguments[1]
       result = Native.XMLHttpRequest_open.apply(xhr, [].slice.call(arguments))
+
       result
 
 #-------------------------------------------------------------------------------

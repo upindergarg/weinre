@@ -9,7 +9,9 @@
 module.exports = class StackTrace
 
     constructor: (args) ->
-        throw Error("first parameter to " + arguments.callee.signature + " must be an Arguments object")  if not args or not args.callee
+        if not args or not args.callee
+            throw Error("first parameter to " + arguments.callee.signature + " must be an Arguments object")
+
         @trace = getTrace(args)
 
     #---------------------------------------------------------------------------
@@ -29,6 +31,7 @@ getTrace =  (args) ->
       result = []
       visitedFuncs = []
       func = args.callee
+
       while func
           if func.signature
               result.push func.signature
@@ -38,11 +41,14 @@ getTrace =  (args) ->
               result.push func.name
           else
               result.push "<anonymous>"
+
           unless -1 == visitedFuncs.indexOf(func)
               result.push "... recursion"
               return result
+
           visitedFuncs.push func
           func = func.caller
+
       result
 
 #-------------------------------------------------------------------------------

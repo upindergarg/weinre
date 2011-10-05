@@ -6,8 +6,8 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Ex = require('./Ex')
-IDLTools = require('./IDLTools')
+Ex         = require('./Ex')
+IDLTools   = require('./IDLTools')
 StackTrace = require('./StackTrace')
 
 _notImplemented     = {}
@@ -41,13 +41,16 @@ module.exports = class Weinre
     #---------------------------------------------------------------------------
     @notImplemented: (thing) ->
         return  if _notImplemented[thing]
+
         _notImplemented[thing] = true
         return  unless _showNotImplemented
+
         Weinre.logWarning thing + " not implemented"
 
     #---------------------------------------------------------------------------
     @showNotImplemented: () ->
         _showNotImplemented = true
+
         for key of _notImplemented
             Weinre.logWarning key + " not implemented"
 
@@ -74,15 +77,21 @@ class ConsoleLogger
     logInfo:    (message) -> console.log "info: #{message}"
     logDebug:   (message) -> console.log "debug: #{message}"
 
-logger = new ConsoleLogger()
+consoleLogger = new ConsoleLogger()
 
 #-------------------------------------------------------------------------------
 getLogger =  () ->
-      return logger  if logger
-      if Weinre.client
-          logger = Weinre.WeinreClientCommands
-      else logger = Weinre.WeinreTargetCommands  if Weinre.target
-      logger
+    return logger  if logger
+
+    if Weinre.client
+        logger = Weinre.WeinreClientCommands
+        return logger
+
+    if Weinre.target
+        logger = Weinre.WeinreTargetCommands
+        return logger
+
+    consoleLogger
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

@@ -13,9 +13,11 @@ module.exports = class ConnectorList
 
     constructor: (title) ->
         @connectors = {}
-        @noneItem = dt.LI("none")
+
+        @noneItem     = dt.LI("none")
         @ulConnectors = dt.UL(@noneItem)
-        @div = dt.DIV(dt.H1(title), @ulConnectors)
+        @div          = dt.DIV(dt.H1(title), @ulConnectors)
+
         @noneItem.addStyleClass "weinre-connector-item"
 
     #---------------------------------------------------------------------------
@@ -25,10 +27,14 @@ module.exports = class ConnectorList
     #---------------------------------------------------------------------------
     add: (connector) ->
         return  if @connectors[connector.channel]
+
         @connectors[connector.channel] = connector
+
         li = @getListItem(connector)
-        @noneItem.style.display = "none"  unless @noneItem.style.display == "none"
         li.addStyleClass "weinre-fadeable"
+
+        @noneItem.style.display = "none"
+
         insertionPoint = @getConnectorInsertionPoint(connector)
         unless insertionPoint
             @ulConnectors.appendChild li
@@ -45,6 +51,7 @@ module.exports = class ConnectorList
         for connectorChannel of @connectors
             continue  if connectorChannel == ignoring
             newest = connectorChannel  if connectorChannel > newest
+
         return null  if newest == 0
         newest
 
@@ -61,8 +68,10 @@ module.exports = class ConnectorList
     #---------------------------------------------------------------------------
     remove: (channel, fast) ->
         self = this
+
         element = @getConnectorElement(channel)
         return  unless element
+
         connector = @connectors[channel]
         connector.closed = true  if connector
         delete @connectors[channel]
@@ -89,9 +98,11 @@ module.exports = class ConnectorList
     #---------------------------------------------------------------------------
     getConnectors: () ->
         result = []
+
         for channel of @connectors
             continue  unless @connectors.hasOwnProperty(channel)
             result.push @connectors[channel]
+
         result
 
     #---------------------------------------------------------------------------
@@ -115,6 +126,7 @@ module.exports = class ConnectorList
             element = @getConnectorElement(channel)
         else
             element = channel
+
         return  unless element
         element.removeStyleClass "error"
         element.removeStyleClass "closed"

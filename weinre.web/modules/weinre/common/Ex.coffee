@@ -12,7 +12,9 @@ StackTrace = require('./StackTrace')
 module.exports = class Ex
 
     constructor: (args, message) ->
-        throw Ex(arguments, "first parameter must be an Arguments object")  if not args or not args.callee
+        if not args or not args.callee
+            throw Ex(arguments, "first parameter must be an Arguments object")
+
         StackTrace.dump args
         message = "threw error: " + message  if message instanceof Error
         new Error(prefix(args, message))

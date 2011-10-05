@@ -18,16 +18,19 @@ module.exports = class WiConsoleImpl
     setConsoleMessagesEnabled: ( enabled, callback) ->
         oldValue = @messagesEnabled
         @messagesEnabled = enabled
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ oldValue ]  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ oldValue ]
 
     #---------------------------------------------------------------------------
     clearConsoleMessages: (callback) ->
         Weinre.wi.ConsoleNotify.consoleMessagesCleared()
-        Weinre.WeinreTargetCommands.sendClientCallback callback, []  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, []
 
     #---------------------------------------------------------------------------
     setMonitoringXHREnabled: ( enabled, callback) ->
-        Weinre.WeinreTargetCommands.sendClientCallback callback, []  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, []
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

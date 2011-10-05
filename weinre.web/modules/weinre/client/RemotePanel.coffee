@@ -6,11 +6,11 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Binding = require('../common/Binding')
-Weinre = require('../common/Weinre')
+Binding       = require('../common/Binding')
+Weinre        = require('../common/Weinre')
 
 ConnectorList = require('./ConnectorList')
-dt = require('./DOMTemplates')
+DT            = require('./DOMTemplates')
 
 # fix WebInspector.Panel's prototype so our super call works
 WebInspector.Panel.prototype.constructor = WebInspector.Panel
@@ -29,22 +29,22 @@ module.exports = class RemotePanel extends WebInspector.Panel
 
     #---------------------------------------------------------------------------
     initialize: () ->
-        div = dt.DIV()
+        div = DT.DIV()
         div.style.position = "absolute"
         div.style.top = "1em"
         div.style.right = "1em"
         div.style.left = "1em"
         div.style.bottom = "1em"
         div.style.overflow = "auto"
-        icon = dt.IMG(src: "../images/weinre-icon-128x128.png")
+        icon = DT.IMG(src: "../images/weinre-icon-128x128.png")
         icon.style.float = "right"
         div.appendChild icon
         @targetList = new TargetList()
         @clientList = new ClientList()
         div.appendChild @targetList.getElement()
         div.appendChild @clientList.getElement()
-        @serverProperties = dt.DIV($className: "weinreServerProperties")
-        div.appendChild dt.H1("Server Properties")
+        @serverProperties = DT.DIV($className: "weinreServerProperties")
+        div.appendChild DT.H1("Server Properties")
         div.appendChild @serverProperties
         @element.appendChild div
         @reset()
@@ -161,7 +161,7 @@ class TargetList extends ConnectorList
     getListItem: (target) ->
         self = this
         text = target.hostName + " [channel: " + target.channel + " id: " + target.id + "]" + " - " + target.url
-        item = dt.LI($connectorChannel: target.channel, text)
+        item = DT.LI($connectorChannel: target.channel, text)
         item.addStyleClass "weinre-connector-item"
         item.addStyleClass "target"
         item.addEventListener "click", ((e) ->
@@ -196,10 +196,14 @@ class ClientList extends ConnectorList
     #---------------------------------------------------------------------------
     getListItem: (client) ->
         text = client.hostName + " [channel: " + client.channel + " id: " + client.id + "]"
-        item = dt.LI($connectorChannel: client.channel, text)
+        item = DT.LI($connectorChannel: client.channel, text)
         item.addStyleClass "weinre-connector-item"
         item.addStyleClass "client"
-        item.addStyleClass "current"  if client.channel == Weinre.messageDispatcher.channel  if Weinre.messageDispatcher
+
+        if Weinre.messageDispatcher
+            if client.channel == Weinre.messageDispatcher.channel
+                item.addStyleClass "current"
+
         client.element = item
         item
 

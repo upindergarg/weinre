@@ -6,9 +6,9 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Ex = require('../common/Ex')
+Ex      = require('../common/Ex')
 Binding = require('../common/Binding')
-Weinre = require('../common/Weinre')
+Weinre  = require('../common/Weinre')
 
 extensions = []
 

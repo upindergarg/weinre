@@ -12,22 +12,28 @@ Binding = require('../common/Binding')
 module.exports = class SqlStepper
 
     constructor: (steps) ->
-        return new SqlStepper(steps)  unless (this instanceof SqlStepper)
+        return new SqlStepper(steps) unless (this instanceof SqlStepper)
+
         @__context = {}
+
         context = @__context
         context.steps = steps
 
     #---------------------------------------------------------------------------
     run: (db, errorCallback) ->
         context = @__context
-        throw new Ex(arguments, "stepper has already been run")  if context.hasBeenRun
-        context.hasBeenRun = true
-        context.db = db
-        context.errorCallback = errorCallback
-        context.nextStep = 0
+        if context.hasBeenRun
+            throw new Ex(arguments, "stepper has already been run")
+
+        context.hasBeenRun       = true
+        context.db               = db
+        context.errorCallback    = errorCallback
+        context.nextStep         = 0
         context.ourErrorCallback = new Binding(this, ourErrorCallback)
-        context.runStep = new Binding(this, runStep)
+        context.runStep          = new Binding(this, runStep)
+
         @executeSql = new Binding(this, executeSql)
+
         db.transaction context.runStep
 
     #---------------------------------------------------------------------------
@@ -73,9 +79,11 @@ ourErrorCallback =  (tx, sqlError) ->
 runStep =  (tx, resultSet) ->
       context = @__context
       return  if context.nextStep >= context.steps.length
+
       context.tx = tx
       context.currentStep = context.nextStep
       context.nextStep++
+
       step = context.steps[context.currentStep]
       step.call this, resultSet
 

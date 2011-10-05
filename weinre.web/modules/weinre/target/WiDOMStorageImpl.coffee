@@ -17,9 +17,11 @@ module.exports = class WiDOMStorageImpl
     #---------------------------------------------------------------------------
     getDOMStorageEntries: ( storageId, callback) ->
         storageArea = _getStorageArea(storageId)
+
         unless storageArea
             Weinre.logWarning arguments.callee.signature + " passed an invalid storageId: " + storageId
             return
+
         result = []
         length = storageArea.length
         i = 0
@@ -29,14 +31,18 @@ module.exports = class WiDOMStorageImpl
             val = storageArea.getItem(key)
             result.push [ key, val ]
             i++
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
     setDOMStorageItem: ( storageId,  key,  value, callback) ->
         storageArea = _getStorageArea(storageId)
+
         unless storageArea
             Weinre.logWarning arguments.callee.signature + " passed an invalid storageId: " + storageId
             return
+
         result = true
         try
             if storageArea == window.localStorage
@@ -44,21 +50,28 @@ module.exports = class WiDOMStorageImpl
             else Native.SessionStorage_setItem key, value  if storageArea == window.sessionStorage
         catch e
             result = false
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
     removeDOMStorageItem: ( storageId,  key, callback) ->
         storageArea = _getStorageArea(storageId)
+
         unless storageArea
             Weinre.logWarning arguments.callee.signature + " passed an invalid storageId: " + storageId
             return
+
         result = true
         try
             if storageArea == window.localStorage
                 Native.LocalStorage_removeItem key
-            else Native.SessionStorage_removeItem key  if storageArea == window.sessionStorage
+            else
+                if storageArea == window.sessionStorage
+                    Native.SessionStorage_removeItem key
         catch e
             result = false
+
         Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
 
     #---------------------------------------------------------------------------
@@ -80,6 +93,7 @@ module.exports = class WiDOMStorageImpl
             window.localStorage.clear = ->
                 Native.LocalStorage_clear()
                 _storageEventHandler storageArea: window.localStorage
+
         if window.sessionStorage
             Weinre.wi.DOMStorageNotify.addDOMStorage
                 id: 2
@@ -97,6 +111,7 @@ module.exports = class WiDOMStorageImpl
             window.sessionStorage.clear = ->
                 Native.SessionStorage_clear()
                 _storageEventHandler storageArea: window.sessionStorage
+
         document.addEventListener "storage", _storageEventHandler, false
 
 #-------------------------------------------------------------------------------
@@ -104,6 +119,7 @@ _getStorageArea =  (storageId) ->
       if storageId == 1
           return window.localStorage
       else return window.sessionStorage  if storageId == 2
+
       null
 
 #-------------------------------------------------------------------------------
@@ -114,6 +130,7 @@ _storageEventHandler =  (event) ->
           storageId = 2
       else
           return
+
       Weinre.wi.DOMStorageNotify.updateDOMStorage storageId
 
 #-------------------------------------------------------------------------------

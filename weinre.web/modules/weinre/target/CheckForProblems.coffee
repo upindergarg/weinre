@@ -19,9 +19,12 @@ checkForOldPrototypeVersion =  () ->
       badVersion = false
       return  if typeof Prototype == "undefined"
       return  unless Prototype.Version
+
       badVersion = true  if Prototype.Version.match(/^1\.5.*/)
       badVersion = true  if Prototype.Version.match(/^1\.6.*/)
-      alert "Sorry, weinre is not support in versions of Prototype earlier than 1.7"  if badVersion
+
+      if badVersion
+          alert "Sorry, weinre is not support in versions of Prototype earlier than 1.7"
 
 #-------------------------------------------------------------------------------
 require("../common/MethodNamer").setNamesForClass(module.exports)

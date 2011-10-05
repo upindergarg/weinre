@@ -6,22 +6,22 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Native = require('../common/Native')
-
-IDLTools = require('../common/IDLTools')
-Callback = require('../common/Callback')
-Weinre = require('../common/Weinre')
+Native            = require('../common/Native')
+IDLTools          = require('../common/IDLTools')
+Callback          = require('../common/Callback')
+Weinre            = require('../common/Weinre')
 MessageDispatcher = require('../common/MessageDispatcher')
-Binding = require('../common/Binding')
-IDGenerator = require('../common/IDGenerator')
+Binding           = require('../common/Binding')
+IDGenerator       = require('../common/IDGenerator')
 
-InspectorBackendImpl = require('./InspectorBackendImpl')
-InspectorFrontendHostImpl = require('./InspectorFrontendHostImpl')
-WeinreClientEventsImpl = require('./WeinreClientEventsImpl')
+InspectorBackendImpl        = require('./InspectorBackendImpl')
+InspectorFrontendHostImpl   = require('./InspectorFrontendHostImpl')
+WeinreClientEventsImpl      = require('./WeinreClientEventsImpl')
 WeinreExtraTargetEventsImpl = require('./WeinreExtraTargetEventsImpl')
-RemotePanel = require('./RemotePanel')
+RemotePanel                 = require('./RemotePanel')
 
 AutoConnect = true
+
 Weinre.showNotImplemented()
 
 #-------------------------------------------------------------------------------
@@ -32,13 +32,18 @@ module.exports = class Client
     #---------------------------------------------------------------------------
     initialize: ->
         window.addEventListener "load", Binding(this, "onLoaded"), false
+
         messageDispatcher = new MessageDispatcher("../ws/client", @_getId())
         Weinre.messageDispatcher = messageDispatcher
+
         InspectorBackendImpl.setupProxies()
-        Weinre.WeinreClientCommands = messageDispatcher.createProxy("WeinreClientCommands")
+
+        Weinre.WeinreClientCommands      = messageDispatcher.createProxy("WeinreClientCommands")
         Weinre.WeinreExtraClientCommands = messageDispatcher.createProxy("WeinreExtraClientCommands")
+
         messageDispatcher.registerInterface "WeinreExtraTargetEvents", new WeinreExtraTargetEventsImpl(), false
         messageDispatcher.registerInterface "WebInspector", WebInspector, false
+
         WebInspector.mainResource = {}
         WebInspector.mainResource.url = location.href
 
@@ -60,15 +65,19 @@ module.exports = class Client
     #---------------------------------------------------------------------------
     _installRemotePanel: ->
         WebInspector.panels.remote = new RemotePanel()
-        panel = WebInspector.panels.remote
+
+        panel   = WebInspector.panels.remote
         toolbar = document.getElementById("toolbar")
+
         WebInspector.addPanelToolbarIcon toolbar, panel, toolbar.childNodes[1]
         WebInspector.panelOrder.unshift WebInspector.panelOrder.pop()
         WebInspector.currentPanel = panel
+
         toolButtonsToHide = [ "scripts" ]
         for toolButtonToHide in toolButtonsToHide
             continue unless WebInspector.panels[toolButtonToHide]
             continue unless WebInspector.panels[toolButtonToHide].toolbarItem
+
             WebInspector.panels[toolButtonToHide].toolbarItem.style.display = "none"
 
         button = document.getElementById("dock-status-bar-item")
@@ -77,7 +86,9 @@ module.exports = class Client
     #---------------------------------------------------------------------------
     onLoaded: ->
         Weinre.WeinreClientCommands.registerClient Binding(this, @cb_registerClient)
+
         @_installRemotePanel()
+
         messageDispatcher = Weinre.messageDispatcher
         messageDispatcher.registerInterface "WeinreClientEvents", new WeinreClientEventsImpl(this), false
         messageDispatcher.registerInterface "InspectorFrontendHost", InspectorFrontendHost, false
@@ -85,9 +96,11 @@ module.exports = class Client
     #---------------------------------------------------------------------------
     cb_registerClient: (clientDescription) ->
         Weinre.clientDescription = clientDescription
+
         if @uiAvailable()
             WebInspector.panels.remote.setCurrentClient clientDescription.channel
             WebInspector.panels.remote.afterInitialConnection()
+
         Weinre.messageDispatcher.getWebSocket().addEventListener "close", Binding(this, @cb_webSocketClosed)
 
     #---------------------------------------------------------------------------
@@ -101,16 +114,20 @@ module.exports = class Client
     @main: ->
         Weinre.client = new Client()
         Weinre.client.initialize()
-        window.installWebInspectorAPIsource = installWebInspectorAPIsource
 
+        window.installWebInspectorAPIsource = installWebInspectorAPIsource
 
 #-------------------------------------------------------------------------------
 installWebInspectorAPIsource =  () ->
-      return  if "webInspector" of window
+      return if "webInspector" of window
+
       extensionAPI = window.parent.InspectorFrontendHost.getExtensionAPI()
       extensionAPI = extensionAPI.replace("location.hostname + location.port", "location.hostname + ':' + location.port")
+
       id = IDGenerator.next()
+
       console.log "installing webInspector with injectedScriptId: " + id
+
       extensionAPI += "(null,null," + id + ")"
       extensionAPI
 

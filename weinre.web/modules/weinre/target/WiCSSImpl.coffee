@@ -18,6 +18,7 @@ module.exports = class WiCSSImpl
     getStylesForNode: ( nodeId, callback) ->
         result = {}
         node = Weinre.nodeStore.getNode(nodeId)
+
         unless node
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
@@ -30,41 +31,50 @@ module.exports = class WiCSSImpl
                 cssProperties: []
         else
             computedStyle = Weinre.cssStore.getComputedStyle(node)
+
         result =
-            inlineStyle: Weinre.cssStore.getInlineStyle(node)
-            computedStyle: computedStyle
+            inlineStyle:     Weinre.cssStore.getInlineStyle(node)
+            computedStyle:   computedStyle
             matchedCSSRules: Weinre.cssStore.getMatchedCSSRules(node)
             styleAttributes: Weinre.cssStore.getStyleAttributes(node)
-            pseudoElements: Weinre.cssStore.getPseudoElements(node)
-            inherited: []
+            pseudoElements:  Weinre.cssStore.getPseudoElements(node)
+            inherited:       []
 
         parentNode = node.parentNode
         while parentNode
             parentStyle =
-                inlineStyle: Weinre.cssStore.getInlineStyle(parentNode)
+                inlineStyle:     Weinre.cssStore.getInlineStyle(parentNode)
                 matchedCSSRules: Weinre.cssStore.getMatchedCSSRules(parentNode)
 
             result.inherited.push parentStyle
             parentNode = parentNode.parentNode
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
     getComputedStyleForNode: ( nodeId, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
+
         unless node
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
+
         result = Weinre.cssStore.getComputedStyle(node)
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
     getInlineStyleForNode: ( nodeId, callback) ->
         node = Weinre.nodeStore.getNode(nodeId)
+
         unless node
             Weinre.logWarning arguments.callee.signature + " passed an invalid nodeId: " + nodeId
             return
+
         result = Weinre.cssStore.getInlineStyle(node)
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]  if callback
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
     #---------------------------------------------------------------------------
     getAllStyles: (callback) ->

@@ -6,10 +6,9 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Weinre = require('../common/Weinre')
-
+Weinre         = require('../common/Weinre')
 WiDatabaseImpl = require('./WiDatabaseImpl')
-Console = require('./Console')
+Console        = require('./Console')
 
 #-------------------------------------------------------------------------------
 module.exports = class WeinreExtraClientCommandsImpl
@@ -20,6 +19,7 @@ module.exports = class WeinreExtraClientCommandsImpl
     getDatabases: (callback) ->
         return  unless callback
         result = WiDatabaseImpl.getDatabases()
+
         Weinre.WeinreTargetCommands.sendClientCallback callback, [ result ]
 
 #-------------------------------------------------------------------------------

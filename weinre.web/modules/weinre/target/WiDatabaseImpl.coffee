@@ -6,10 +6,10 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Weinre = require('../common/Weinre')
-Native = require('../common/Native')
+Weinre      = require('../common/Weinre')
+Native      = require('../common/Native')
 IDGenerator = require('../common/IDGenerator')
-SqlStepper = require('./SqlStepper')
+SqlStepper  = require('./SqlStepper')
 
 id2db   = {}
 name2db = {}
@@ -32,6 +32,7 @@ module.exports = class WiDatabaseImpl
     getDatabaseTableNames: ( databaseId, callback) ->
         db = dbById(databaseId)
         return  unless db
+
         stepper = SqlStepper([ getTableNames_step_1, getTableNames_step_2 ])
         stepper.callback = callback
         stepper.run db, logSqlError
@@ -40,13 +41,18 @@ module.exports = class WiDatabaseImpl
     executeSQL: ( databaseId,  query, callback) ->
         db = dbById(databaseId)
         return  unless db
+
         txid = Weinre.targetDescription.channel + "-" + IDGenerator.next()
+
         stepper = SqlStepper([ executeSQL_step_1, executeSQL_step_2 ])
-        stepper.txid = txid
-        stepper.query = query
+        stepper.txid     = txid
+        stepper.query    = query
         stepper.callback = callback
+
         stepper.run db, executeSQL_error
-        Weinre.WeinreTargetCommands.sendClientCallback callback, [ true, txid ]  if callback
+
+        if callback
+            Weinre.WeinreTargetCommands.sendClientCallback callback, [ true, txid ]
 
 #-------------------------------------------------------------------------------
 logSqlError =  (sqlError) ->
@@ -95,6 +101,7 @@ executeSQL_step_2 =  (resultSet) ->
               values.push row[columnNames[j]]
               j++
           i++
+
       Weinre.wi.DatabaseNotify.sqlTransactionSucceeded @txid, columnNames, values
 
 #-------------------------------------------------------------------------------
@@ -129,18 +136,21 @@ dbRecordByName =  (name) ->
 dbAdd =  (db, name, version) ->
       record = dbRecordByName(name)
       return record  if record
+
       record = {}
-      record.id = IDGenerator.next()
-      record.domain = window.location.origin
-      record.name = name
+      record.id      = IDGenerator.next()
+      record.domain  = window.location.origin
+      record.name    = name
       record.version = version
-      record.db = db
+      record.db      = db
+
       id2db[record.id] = record
       name2db[name] = record
+
       payload = {}
-      payload.id = record.id
-      payload.domain = record.domain
-      payload.name = name
+      payload.id      = record.id
+      payload.domain  = record.domain
+      payload.name    = name
       payload.version = version
       Weinre.WeinreExtraTargetEvents.databaseOpened payload
 

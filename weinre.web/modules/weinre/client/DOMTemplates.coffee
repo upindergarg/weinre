@@ -12,6 +12,7 @@ Ex = require('../common/Ex')
 getElementFunction =  (elementName) ->
       ->
           element = document.createElement(elementName)
+
           args = [].slice.call(arguments)
           for argument in args
               if argument.nodeType
@@ -37,6 +38,7 @@ addToElement_Node =  (element, anElement) ->
 addToElement_Object =  (element, anObject) ->
       for key of anObject
           continue  unless anObject.hasOwnProperty(key)
+
           val = anObject[key]
           if key.substr(0, 1) == "$"
               actualKey = key.substr(1)

@@ -6,8 +6,8 @@
 # Copyright (c) 2010, 2011 IBM Corporation
 #---------------------------------------------------------------------------------
 
-Callback = require('../common/Callback')
-Weinre = require('../common/Weinre')
+Callback                    = require('../common/Callback')
+Weinre                      = require('../common/Weinre')
 
 WeinreExtraTargetEventsImpl = require('./WeinreExtraTargetEventsImpl')
 
@@ -31,6 +31,7 @@ module.exports = class WeinreClientEventsImpl
         WebInspector.panels.remote.addTarget targetDescription  if @client.uiAvailable()
         return  unless Weinre.client.autoConnect()
         return  unless Weinre.messageDispatcher
+
         Weinre.WeinreClientCommands.connectTarget Weinre.messageDispatcher.channel, targetDescription.channel
 
     #---------------------------------------------------------------------------
@@ -46,13 +47,17 @@ module.exports = class WeinreClientEventsImpl
         if @client.uiAvailable()
             WebInspector.panels.remote.setClientState clientChannel, "connected"
             WebInspector.panels.remote.setTargetState targetChannel, "connected"
+
         return  unless clientChannel == Weinre.messageDispatcher.channel
+
         WebInspector.panels.elements.reset()
         WebInspector.panels.timeline._clearPanel()
         WebInspector.panels.resources.reset()
+
         target = WebInspector.panels.remote.getTarget(targetChannel)
         document.title = titleConnectedPrefix + target.url
         WebInspector.inspectedURLChanged target.url
+
         Weinre.WeinreExtraClientCommands.getDatabases (databaseRecords) ->
             WeinreExtraTargetEventsImpl.addDatabaseRecords databaseRecords
 
@@ -61,12 +66,16 @@ module.exports = class WeinreClientEventsImpl
         if @client.uiAvailable()
             WebInspector.panels.remote.setClientState clientChannel, "not-connected"
             WebInspector.panels.remote.setTargetState targetChannel, "not-connected"
+
         return  unless clientChannel == Weinre.messageDispatcher.channel
+
         document.title = titleNotConnected
         return  unless Weinre.client.autoConnect()
         return  unless @client.uiAvailable()
+
         nextTargetChannel = WebInspector.panels.remote.getNewestTargetChannel(targetChannel)
         return  unless nextTargetChannel
+
         Weinre.WeinreClientCommands.connectTarget Weinre.messageDispatcher.channel, nextTargetChannel
         Weinre.logInfo "autoconnecting to " + nextTargetChannel
 

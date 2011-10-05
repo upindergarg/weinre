@@ -38,9 +38,12 @@ module.exports = class InjectedScriptHostImpl
         ctor = object.constructor
         ctorName = ctor.fullClassName or ctor.displayName or ctor.name
         return ctorName  if ctorName and (ctorName != "Object")
+
         pattern = /\[object (.*)\]/
         match = pattern.exec(ctor.toString())
+
         return match[1]  if match
+
         "Object"
 
 #-------------------------------------------------------------------------------
